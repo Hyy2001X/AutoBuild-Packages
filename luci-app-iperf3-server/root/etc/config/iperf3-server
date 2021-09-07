@@ -1,0 +1,10 @@
+
+config iperf3-server
+	option enabled '0'
+	option port '5201'
+	option options ''
+	option tips '-f, --format [k,m,K,M] 指定打印测试结果的带宽格式 k: [Kbits] m: [Mbits] K: [KBytes] M: [MBytes]
+-i, --interval [0,0.1-60] 以秒为单位,设置各个信息测试报告打印输出的周期
+-A, --affinity [n,m]  设定将 iPerf3 进程运行在指定的 CPU 编号 n,m 上
+--logfile [file] 将 iPerf3 测试结果保存到指定的 file 文件
+-J, --json 运行结束时, 用 JSON 格式输出测试结果,结合 "--logfile [file]" 将输出报告打印到指定的 file 文件'

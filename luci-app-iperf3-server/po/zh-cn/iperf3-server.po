@@ -1,0 +1,26 @@
+msgid "Enabled"
+msgstr "启用"
+
+msgid "iPerf - The ultimate speed test tool for TCP, UDP and SCTP"
+msgstr "iPerf 一款集 TCP UDP 和 SCTP 于的一身的终极速度测试工具"
+
+msgid "Port"
+msgstr "端口号"
+
+msgid "iPerf3 Server"
+msgstr "iPerf3 服务器"
+
+msgid "Server port to listen on"
+msgstr "服务端监听端口"
+
+msgid "Extra options"
+msgstr "额外参数"
+
+msgid "Incorrect options may cause iPerf3 Server to fail to start"
+msgstr "错误的参数可能导致 iPerf3 服务端无法启动"
+
+msgid "Option tips"
+msgstr "参数提示"
+
+msgid "For reference only"
+msgstr "部分服务端参数,描述仅供参考"

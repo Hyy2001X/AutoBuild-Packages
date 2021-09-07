@@ -1,0 +1,62 @@
+#!/bin/bash /etc/rc.common
+START=99
+Script=/bin/AutoUpdate.sh
+Script_Command="bash $Script -u"
+
+start_instance() {
+	[[ ! -s $Script ]] && return 1
+	local enable proxy forceflash github autocheck week minute hour
+	config_get_bool enable $1 enable
+	if [[ $enable == 1 ]]; then
+		config_get proxy $1 proxy
+		config_get forceflash $1 forceflash
+		config_get github $1 github
+		config_get autocheck $1 autocheck
+		config_get week $1 week
+		config_get minute $1 minute
+		config_get hour $1 hour
+		[[ $week == 7 ]] && week='*'
+		remove_corntask
+		[[ $proxy == 1 ]] && Script_Command="$Script_Command -P"
+		[[ $forceflash == 1 ]] && Script_Command="$Script_Command -F"
+		echo -e "$minute $hour * * $week $Script_Command		## AutoUpdate crontab" >> /etc/crontabs/root
+		[[ $autocheck != 0 ]] && {
+			echo -e "* */$autocheck * * * bash $Script -V Cloud > /tmp/Cloud_Version		## AutoUpdate crontab" >> /etc/crontabs/root
+			echo -e "* */$autocheck * * * bash $Script -v Cloud > /tmp/Cloud_Script_Version		## AutoUpdate crontab" >> /etc/crontabs/root
+		}
+		/etc/init.d/cron restart
+	else
+		remove_corntask
+	fi
+	bash $Script -C $github > /dev/null 2>&1
+	bash $Script --clean > /dev/null 2>&1
+}
+
+remove_corntask() {
+	[[ $(cat /etc/crontabs/root) =~ "## AutoUpdate crontab" ]] && {
+		sed -i '/## AutoUpdate crontab/d' /etc/crontabs/root
+		/etc/init.d/cron restart
+	}
+}
+
+disable() {
+	remove_corntask
+	uci set autoupdate.@autoupdate[0].enable=0
+	uci set autoupdate.@autoupdate[0].proxy=0
+	uci set autoupdate.@autoupdate[0].forceflash=0
+	uci set autoupdate.@autoupdate[0].autocheck=0
+	uci commit autoupdate
+}
+
+service_triggers() {
+	procd_add_reload_trigger "autoupdate"
+}
+
+stop() {
+	remove_corntask
+}
+
+start() {
+	config_load autoupdate
+	config_foreach start_instance autoupdate
+}

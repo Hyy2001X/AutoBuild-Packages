@@ -1,0 +1,9 @@
+memory() {
+	free | grep Mem | awk '{a=$7*100/$2;b=$7/1024;c=$2/1024} {printf("%.1fM Avaiable | %.1f%% of %.1fM\n",b,a,c)}'
+}
+
+uptime() {
+	awk '{a=$1/86400;b=($1%86400)/3600;c=($1%3600)/60;d=($1%60)} {printf("%d 天 %d 小时 %d 分钟 %d 秒\n",a,b,c,d)}' /proc/uptime
+}
+
+$*

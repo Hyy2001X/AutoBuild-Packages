@@ -1,0 +1,29 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+LOGGER="logger -t iPerf3"
+
+start_instance() {
+	config_get_bool enabled $1 'enabled'
+	config_get port $1 'port' 5201
+	config_get options $1 'options'
+	if [ $enabled = 1 ]; then
+		$LOGGER "Starting iPerf3 server with port $port ..."
+		[ -n "$options" ] && $LOGGER "Extra options: [$options]"
+		iperf3 -s -D -p $port $options
+	fi
+}
+
+start() {
+	config_load iperf3-server
+	config_foreach start_instance iperf3-server
+}
+
+stop() {
+	$LOGGER "Stopping iPerf3 server ..."
+	kill -9 $(busybox ps | grep "iperf3 -s" | grep -v grep | awk '{print $1}')
+}
+
+service_triggers() {
+	procd_add_reload_trigger "iperf3-server"
+}
