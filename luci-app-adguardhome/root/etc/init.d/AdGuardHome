@@ -13,8 +13,7 @@ EXTRA_HELP="        do_redirect 0 or 1\
 		test_crontab
 		force_reload
 		isrunning"
-set_forward_dnsmasq()
-{
+set_forward_dnsmasq() {
 	local PORT="$1"
 	addr="127.0.0.1#$PORT"
 	OLD_SERVER="`uci get dhcp.@dnsmasq[0].server 2>/dev/null`"
@@ -36,8 +35,7 @@ set_forward_dnsmasq()
 	/etc/init.d/dnsmasq restart
 }
 
-stop_forward_dnsmasq()
-{
+stop_forward_dnsmasq() {
 	local OLD_PORT="$1"
 	addr="127.0.0.1#$OLD_PORT"
 	OLD_SERVER="`uci get dhcp.@dnsmasq[0].server 2>/dev/null`"
@@ -58,8 +56,7 @@ stop_forward_dnsmasq()
 	/etc/init.d/dnsmasq restart
 }
 
-set_iptable()
-{
+set_iptable() {
 	local ipv6_server=$1
 	local tcp_server=$2
 	uci -q batch <<-EOF >/dev/null 2>&1
@@ -80,8 +77,7 @@ EOF
 	ip6tables -t nat -I PREROUTING 1 -m comment --comment "AdGuardHome" -p udp --dport 53 -j REDIRECT --to-ports $AdGuardHome_PORT
 }
 
-clear_iptable()
-{
+clear_iptable() {
 	uci -q batch <<-EOF >/dev/null 2>&1
   delete firewall.AdGuardHome
 	commit firewall
@@ -120,25 +116,28 @@ service_triggers() {
 	procd_add_reload_trigger "$CONFIGURATION"
 	[ "$(uci get AdGuardHome.AdGuardHome.redirect)" == "redirect" ] && procd_add_reload_trigger firewall
 }
-isrunning(){
-config_load "${CONFIGURATION}"
-_isrunning
-local r=$?
-([ "$r" == "0" ] && echo "running") || ([ "$r" == "1" ] && echo "not run" ) || echo "no bin"
-return $r
+
+isrunning() {
+	config_load "${CONFIGURATION}"
+	_isrunning
+	local r=$?
+	([ "$r" == "0" ] && echo "running") || ([ "$r" == "1" ] && echo "not run" ) || echo "no bin"
+	return $r
 }
-_isrunning(){
+
+_isrunning() {
 	config_get binpath $CONFIGURATION binpath "/usr/bin/AdGuardHome/AdGuardHome"
 	[ ! -f "$binpath" ] && return 2
 	pgrep $binpath 2>&1 >/dev/null && return 0
 	return 1
 }
-force_reload(){
+
+force_reload() {
 	config_load "${CONFIGURATION}"
 	_isrunning && procd_send_signal "$CONFIGURATION" || start
 }
-get_tz()
-{
+
+get_tz() {
 	SET_TZ=""
 
 	if [ -e "/etc/localtime" ]; then
@@ -161,12 +160,11 @@ get_tz()
 	SET_TZ=$tz
 }
 
-rm_port53()
-{
+rm_port53() {
 	local AdGuardHome_PORT=$(config_editor "dns.port" "" "$configpath" "1")
 	dnsmasq_port=$(uci get dhcp.@dnsmasq[0].port 2>/dev/null)
 	if [ -z "$dnsmasq_port" ]; then
-	dnsmasq_port="53"
+		dnsmasq_port="53"
 	fi
 	if [ "$dnsmasq_port" == "$AdGuardHome_PORT" ]; then
 		if [ "$dnsmasq_port" == "53" ]; then
@@ -181,8 +179,7 @@ rm_port53()
 	/etc/init.d/dnsmasq restart
 }
 
-use_port53()
-{
+use_port53() {
 	local AdGuardHome_PORT=$(config_editor "dns.port" "" "$configpath" "1")
 	dnsmasq_port=$(uci get dhcp.@dnsmasq[0].port 2>/dev/null)
 	if [ -z "$dnsmasq_port" ]; then
@@ -200,13 +197,13 @@ use_port53()
 	uci commit dhcp
 	/etc/init.d/dnsmasq restart
 }
-do_redirect()
-{
+
+do_redirect() {
 	config_load "${CONFIGURATION}"
 	_do_redirect $1
 }
-_do_redirect()
-{
+
+_do_redirect() {
 	local section="$CONFIGURATION"
 	args=""
 	ipv6_server=1
@@ -266,8 +263,8 @@ _do_redirect()
 		use_port53
 	fi
 }
-get_filesystem()
-{
+
+get_filesystem() {
 # print out path filesystem
     echo $1 | awk '
     BEGIN{
@@ -345,7 +342,7 @@ boot_service() {
 	fi
 }
 
-testbackup(){
+testbackup() {
 	config_load "${CONFIGURATION}"
 	if [ "$1" == "backup" ]; then
 		backup
@@ -353,12 +350,13 @@ testbackup(){
 		restore
 	fi
 }
-restore()
-{
+
+restore() {
 	config_get workdir $CONFIGURATION workdir "/usr/bin/AdGuardHome"
 	config_get backupwdpath $CONFIGURATION backupwdpath "/usr/bin/AdGuardHome"
 	cp -u -r -f $backupwdpath/data $workdir
 }
+
 backup() {
 	config_get backupwdpath $CONFIGURATION backupwdpath "/usr/bin/AdGuardHome"
 	mkdir -p $backupwdpath/data
@@ -386,6 +384,7 @@ backup() {
 		done
 	done
 }
+
 start_service() {
 	# Reading config
 	rm /var/run/AdGserverdis >/dev/null 2>&1
@@ -393,6 +392,7 @@ start_service() {
 	# update password
 	config_get hashpass $CONFIGURATION hashpass ""
 	config_get configpath $CONFIGURATION configpath "/etc/AdGuardHome.yaml"
+	[ -f $configpath ] && chmod 777 $configpath
 	if [ -n "$hashpass" ]; then
 		config_editor "users.password" "$hashpass" "$configpath"
 		uci set $CONFIGURATION.$CONFIGURATION.hashpass=""
@@ -441,7 +441,7 @@ start_service() {
 	# hack to save config file when upgrade system
 	config_get upprotect $CONFIGURATION upprotect ""
 	eval upprotect=${upprotect// /\\\\n}
-	echo -e "$upprotect">/lib/upgrade/keep.d/luci-app-adguardhome
+	echo -e "$upprotect" > /lib/upgrade/keep.d/luci-app-adguardhome
 	
 	config_get logfile $CONFIGURATION logfile ""
 	if [ -n "$logfile" ]; then
@@ -452,6 +452,8 @@ start_service() {
 		_do_redirect 0
 		/usr/share/AdGuardHome/update_core.sh 2>&1 >/tmp/AdGuardHome_update.log &
 		exit 0
+	else
+		chmod 777 $binpath
 	fi
 
 	config_get_bool verbose $CONFIGURATION verbose 0
@@ -485,32 +487,31 @@ start_service() {
 	echo "AdGuardHome 服务已启用"
 	(sleep 10 && [ -z "$(pgrep $binpath)" ] && logger "AdGuardHome" "no process in 10s cancel redirect" && _do_redirect 0 )&
 }
-reload_service()
-{
+
+reload_service() {
 	rm /var/run/AdGlucitest >/dev/null 2>&1
 	echo "重载 AdGuardHome 服务..."
 	start
 }
 
-del_querylog(){
-local btarget=$(ls $backupwdpath/data | grep -F "querylog.json" | sort -r | head -n 1)
-local wtarget=$(ls $workdir/data | grep -F "querylog.json" | sort -r | head -n 1)
-if [ "$btarget"x == "$wtarget"x ]; then
-	[ -z "$btarget" ] && return 1
-	rm -f $workdir/data/$wtarget
-	rm -f $backupwdpath/data/$btarget
-	return 0
-fi
-if [ "$btarget" \> "$wtarget" ]; then
-	rm -f $backupwdpath/data/$btarget
-	return 0
-else
-	rm -f $workdir/data/$wtarget
-	return 0
-fi
+del_querylog() {
+	local btarget=$(ls $backupwdpath/data | grep -F "querylog.json" | sort -r | head -n 1)
+	local wtarget=$(ls $workdir/data | grep -F "querylog.json" | sort -r | head -n 1)
+	if [ "$btarget"x == "$wtarget"x ]; then
+		[ -z "$btarget" ] && return 1
+		rm -f $workdir/data/$wtarget
+		rm -f $backupwdpath/data/$btarget
+		return 0
+	fi
+	if [ "$btarget" \> "$wtarget" ]; then
+		rm -f $backupwdpath/data/$btarget
+		return 0
+	else
+		rm -f $workdir/data/$wtarget
+		return 0
+	fi
 }
-stop_service()
-{
+stop_service() {
 	config_load "${CONFIGURATION}"
 	_do_redirect 0
 	do_crontab
@@ -523,17 +524,19 @@ stop_service()
 	echo "AdGuardHome 服务已停止"
 	touch /var/run/AdGserverdis
 }
+
 boot() {
 	rc_procd boot_service "$@"
 	if eval "type service_started" 2>/dev/null >/dev/null; then
 		service_started
 	fi
 }
-test_crontab(){
-config_load "${CONFIGURATION}"
-do_crontab
+test_crontab() {
+	config_load "${CONFIGURATION}"
+	do_crontab
 }
-do_crontab(){
+
+do_crontab() {
 	config_get_bool enabled $CONFIGURATION enabled 0
 	config_get crontab $CONFIGURATION crontab ""
 	local findstr default cronenable replace commit
@@ -575,7 +578,7 @@ do_crontab(){
 	[ "$cronreload" -gt 0 ] && /etc/init.d/cron restart
 	#[ "$commit" -gt 0 ] && uci commit AdGuardHome
 }
-crontab_editor(){
+crontab_editor() {
 	#usage input:
 	#findstr=
 	#default=
