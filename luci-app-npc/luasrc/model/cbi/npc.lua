@@ -12,8 +12,7 @@ s:tab("basic",translate("Basic Setting"))
 enable=s:taboption("basic",Flag,"enabled",translate("Enable"))
 enable.rmempty=false
 
-server=s:taboption("basic",Value,"server_addr",translate("Server"),translate("Must an IPv4 address"))
-server.datatype="ipaddr"
+server=s:taboption("basic",Value,"server_addr",translate("Server Address"),translate("IPv4 address or Domain Name"))
 server.optional=false
 server.rmempty=false
 
@@ -23,15 +22,15 @@ port.default="8024"
 port.optional=false
 port.rmempty=false
 
-protocol=s:taboption("basic",ListValue,"protocol",translate("Protocol Type"))
-protocol.default="tcp"
-protocol:value("tcp",translate("TCP Protocol"))
-protocol:value("kcp",translate("KCP Protocol"))
-
 vkey=s:taboption("basic",Value,"vkey",translate("vkey"))
 vkey.optional=false
 vkey.password=true
 vkey.rmempty=false
+
+protocol=s:taboption("basic",ListValue,"protocol",translate("Protocol Type"))
+protocol.default="tcp"
+protocol:value("tcp",translate("TCP Protocol"))
+protocol:value("kcp",translate("KCP Protocol"))
 
 compress=s:taboption("basic",Flag,"compress",translate("Enable Compression"),translate("The contents will be compressed to speed up the traffic forwarding speed, but this will consume some additional cpu resources."))
 compress.default="0"

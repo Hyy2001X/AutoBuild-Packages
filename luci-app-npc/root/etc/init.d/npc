@@ -1,11 +1,11 @@
 #!/bin/sh /etc/rc.common
 # Copyright (C) 2006-2011 OpenWrt.org
 
-START=50
-USE_PROCD=1
+START=95
 
 LOGFILE="/tmp/npc.log"
-tmpconf="/tmp/etc/npc.conf"
+tmp_Conf="/tmp/etc/npc.conf"
+npc_Path="$(which npc)"
 
 npc_header() {
 	local enabled server_addr server_port protocol vkey compress crypt log_level
@@ -19,12 +19,12 @@ npc_header() {
 	config_get crypt $1 crypt
 	config_get log_level $1 log_level
 
-	[ -f $tmpconf ] && rm $tmpconf
-	echo "[common]" > $tmpconf
-	echo "server_addr=${server_addr}:${server_port}" >> $tmpconf
-	echo "conn_type=${protocol}" >> $tmpconf
-	echo "vkey=${vkey}" >> $tmpconf
-	echo "auto_reconnection=true" >> $tmpconf
+	[ -f $tmp_Conf ] && rm $tmp_Conf
+	echo "[common]" > $tmp_Conf
+	echo "server_addr=${server_addr}:${server_port}" >> $tmp_Conf
+	echo "conn_type=${protocol}" >> $tmp_Conf
+	echo "vkey=${vkey}" >> $tmp_Conf
+	echo "auto_reconnection=true" >> $tmp_Conf
 
 	npc_write_bool compress $1
 	npc_write_bool crypt $1
@@ -40,9 +40,9 @@ npc_write_bool() {
 
 	config_get_bool val $config "$opt"
 	if [ "$val" -eq 0 ]; then
-		echo "${opt}=false" >> $tmpconf
+		echo "${opt}=false" >> $tmp_Conf
 	else
-		echo "${opt}=true" >> $tmpconf
+		echo "${opt}=true" >> $tmp_Conf
 	fi
 }
 
@@ -51,10 +51,9 @@ start_service() {
 	config_foreach npc_header npc
 
 	if [ "$Enabled" = "1" ];then
-		logger -t FRPC 'Starting NPC Service ...' 
+		logger -t NPS 'Starting NPS Client ...' 
 		procd_open_instance
-    		procd_set_param command /usr/bin/npc -config=$tmpconf -log_level=$Log_level -log_path=$LOGFILE
-    		#procd_set_param file $tmpconf
+    		procd_set_param command $npc_Path -config=$tmp_Conf -log_level=$Log_level -log_path=$LOGFILE
     		procd_set_param respawn
     		procd_set_param stdout 1
     		procd_set_param stderr 1

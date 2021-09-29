@@ -1,7 +1,7 @@
 
-config nps
+config npc
 	option enabled '0'
-	option server_addr '1.1.1.1'
+	option server_addr '1.2.3.4'
 	option server_port '8024'
 	option protocol 'tcp'
 	option compress '0'

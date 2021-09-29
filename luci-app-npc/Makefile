@@ -7,10 +7,10 @@
 include $(TOPDIR)/rules.mk
 
 LUCI_TITLE:=LuCI support for NPS Client
-LUCI_DEPENDS:=+wget +npc
+LUCI_DEPENDS:=+npc
 LUCI_PKGARCH:=all
-PKG_VERSION:=1.1
-PKG_RELEASE:=5
+PKG_VERSION:=1.2
+PKG_RELEASE:=1
 
 include $(TOPDIR)/feeds/luci/luci.mk
 
