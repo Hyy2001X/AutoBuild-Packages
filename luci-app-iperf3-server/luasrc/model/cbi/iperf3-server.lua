@@ -12,10 +12,13 @@ enable.rmempty = false
 
 port=s:option(Value, "port", translate("Port"),translate("Server port to listen on"))
 port.datatype = "port"
+port.default="5201"
+port.optional=false
+port.rmempty=false
 
 options=s:option(Value, "options", translate("Extra options"),translate("Incorrect options may cause iPerf3 Server to fail to start"))
-
-tips=s:option(TextValue, "tips", translate("Option tips"),translate("For reference only"))
+options.optional=true
+options.rmempty=true
 
 local e=luci.http.formvalue("cbi.apply")
 if e then
