@@ -12,7 +12,7 @@ s:tab("basic",translate("Basic Setting"))
 enable=s:taboption("basic",Flag,"enabled",translate("Enable"))
 enable.rmempty=false
 
-server=s:taboption("basic",Value,"server_addr",translate("Server Address"),translate("IPv4 address or Domain Name"))
+server=s:taboption("basic",Value,"server_addr",translate("Server Address"),translate("Server IPv4 address or Domain Name"))
 server.optional=false
 server.rmempty=false
 
@@ -43,6 +43,7 @@ crypt.rmempty=false
 log_path=s:taboption("basic",Value,"log_path",translate("Log Path"))
 log_path.optional=false
 log_path.rmempty=false
+log_path.default="/tmp/npc.log"
 
 log_level=s:taboption("basic",ListValue,"log_level",translate("Log Level"))
 log_level:value(0,"Emergency")

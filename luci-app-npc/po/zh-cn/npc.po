@@ -4,8 +4,8 @@ msgstr "NPS 内网穿透客户端"
 msgid "Nps is a fast reverse proxy to help you expose a local server behind a NAT or firewall to the internet."
 msgstr "NPS 是一种快速反向代理,可帮助您将 NAT 或防火墙后的本地服务器公开到 Internet"
 
-msgid "IPv4 address or Domain Name"
-msgstr "IPv4 地址或域名"
+msgid "Server IPv4 address or Domain Name"
+msgstr "服务器域名或 IPv4 地址"
 
 msgid "vkey"
 msgstr "唯一验证密钥(vkey)"
@@ -51,3 +51,6 @@ msgstr "致命错误"
 
 msgid "Emergency"
 msgstr "紧急"
+
+msgid "Max Connection"
+msgstr "最大连接数"
