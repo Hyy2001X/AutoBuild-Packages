@@ -8,4 +8,3 @@ config npc
 	option crypt '0'
 	option vkey 'abcdefg'
 	option log_level '4'
-	option log_lpath '/tmp/npc.log'
