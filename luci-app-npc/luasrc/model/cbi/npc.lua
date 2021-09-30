@@ -40,6 +40,10 @@ crypt=s:taboption("basic",Flag,"crypt",translate("Enable Encryption"),translate(
 crypt.default="0"
 crypt.rmempty=false
 
+log_path=s:taboption("basic",Value,"log_path",translate("Log Path"))
+log_path.optional=false
+log_path.rmempty=false
+
 log_level=s:taboption("basic",ListValue,"log_level",translate("Log Level"))
 log_level:value(0,"Emergency")
 log_level:value(2,"Critical")

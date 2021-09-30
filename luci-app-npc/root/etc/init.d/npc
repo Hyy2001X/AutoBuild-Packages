@@ -2,13 +2,13 @@
 # Copyright (C) 2006-2011 OpenWrt.org
 
 START=95
+USE_PROCD=1
 
-LOGFILE="/tmp/npc.log"
-tmp_Conf="/tmp/etc/npc.conf"
 npc_Path="$(which npc)"
+tmp_Conf="/tmp/etc/npc.conf"
 
 npc_header() {
-	local enabled server_addr server_port protocol vkey compress crypt log_level
+	local enabled server_addr server_port protocol vkey compress crypt log_level log_path
 
 	config_get enabled $1 enabled
 	config_get server_addr $1 server_addr
@@ -18,6 +18,7 @@ npc_header() {
 	config_get compress $1 compress
 	config_get crypt $1 crypt
 	config_get log_level $1 log_level
+	config_get log_path $1 log_path
 
 	[ -f $tmp_Conf ] && rm $tmp_Conf
 	echo "[common]" > $tmp_Conf
@@ -29,7 +30,8 @@ npc_header() {
 	npc_write_bool compress $1
 	npc_write_bool crypt $1
 
-	Log_level=$log_level
+	Log_Level=$log_level
+	Log_Path=$log_path
 	Enabled=$enabled
 }
 
@@ -50,10 +52,10 @@ start_service() {
 	config_load npc
 	config_foreach npc_header npc
 
-	if [ "$Enabled" = "1" ];then
-		logger -t NPS 'Starting NPS Client ...' 
+	if [ "$Enabled" = 1 ];then
+		logger -t NPS 'Starting NPS Client ...'
 		procd_open_instance
-    		procd_set_param command $npc_Path -config=$tmp_Conf -log_level=$Log_level -log_path=$LOGFILE
+    		procd_set_param command $npc_Path -config=$tmp_Conf -log_level=$Log_Level -log_path=$Log_Path
     		procd_set_param respawn
     		procd_set_param stdout 1
     		procd_set_param stderr 1
@@ -64,4 +66,3 @@ start_service() {
 service_triggers() {
         procd_add_reload_trigger "npc"
 }
-

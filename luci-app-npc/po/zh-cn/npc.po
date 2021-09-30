@@ -36,3 +36,18 @@ msgstr "TCP"
 
 msgid "KCP Protocol"
 msgstr "KCP"
+
+msgid "Debug"
+msgstr "调试"
+
+msgid "Warning"
+msgstr "警告"
+
+msgid "Error"
+msgstr "错误"
+
+msgid "Critical"
+msgstr "致命错误"
+
+msgid "Emergency"
+msgstr "紧急"
