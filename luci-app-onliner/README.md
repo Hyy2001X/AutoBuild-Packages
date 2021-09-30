@@ -1,3 +1,9 @@
 # luci-app-onliner
 
-汉化
+## 修改内容
+
+   - 汉化
+
+## Based on
+
+   - [rufengsuixing](https://github.com/rufengsuixing/luci-app-onliner)
