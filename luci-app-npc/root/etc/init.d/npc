@@ -14,19 +14,24 @@ npc_header() {
 	config_get server_addr $1 server_addr
 	config_get server_port $1 server_port
 	config_get protocol $1 protocol
+	config_get max_conn $1 max_conn
+	config_get rate_limit $1 rate_limit
+	config_get flow_limit $1 flow_limit
 	config_get vkey $1 vkey
 	config_get compress $1 compress
 	config_get crypt $1 crypt
 	config_get log_level $1 log_level
 	config_get log_path $1 log_path
 
-	[ -f $tmp_Conf ] && rm $tmp_Conf
+	[ -f "$tmp_Conf" ] && rm -f $tmp_Conf
 	echo "[common]" > $tmp_Conf
 	echo "server_addr=${server_addr}:${server_port}" >> $tmp_Conf
 	echo "conn_type=${protocol}" >> $tmp_Conf
 	echo "vkey=${vkey}" >> $tmp_Conf
 	echo "auto_reconnection=true" >> $tmp_Conf
-
+	[ -n "$max_conn" ] && echo "max_conn=${max_conn}" >> $tmp_Conf
+	[ -n "$rate_limit" ] && echo "rate_limit=${rate_limit}" >> $tmp_Conf
+	[ -n "$flow_limit" ] && echo "flow_limit=${flow_limit}" >> $tmp_Conf
 	npc_write_bool compress $1
 	npc_write_bool crypt $1
 

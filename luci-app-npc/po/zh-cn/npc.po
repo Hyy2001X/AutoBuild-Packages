@@ -54,3 +54,18 @@ msgstr "紧急"
 
 msgid "Max Connection"
 msgstr "最大连接数"
+
+msgid "Maximum number of connections (Not necessary)"
+msgstr "最大连接数 (可选,非必须)"
+
+msgid "Rate Limit"
+msgstr "速度限制"
+
+msgid "Client rate limit (Not necessary)"
+msgstr "客户端速度限制 (可选,非必须)"
+
+msgid "Flow Limit"
+msgstr "流量限制"
+
+msgid "Client flow limit (Not necessary)"
+msgstr "客户端流量限制 (可选,非必须)"

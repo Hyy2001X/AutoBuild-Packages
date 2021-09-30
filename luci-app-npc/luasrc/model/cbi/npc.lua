@@ -32,6 +32,18 @@ protocol.default="tcp"
 protocol:value("tcp",translate("TCP Protocol"))
 protocol:value("kcp",translate("KCP Protocol"))
 
+max_conn=s:taboption("basic",Value,"max_conn",translate("Max Connection"),translate("Maximum number of connections (Not necessary)"))
+max_conn.optional=false
+max_conn.rmempty=true
+
+rate_limit=s:taboption("basic",Value,"rate_limit",translate("Rate Limit"),translate("Client rate limit (Not necessary)"))
+rate_limit.optional=false
+rate_limit.rmempty=true
+
+flow_limit=s:taboption("basic",Value,"flow_limit",translate("Flow Limit"),translate("Client flow limit (Not necessary)"))
+flow_limit.optional=false
+flow_limit.rmempty=true
+
 compress=s:taboption("basic",Flag,"compress",translate("Enable Compression"),translate("The contents will be compressed to speed up the traffic forwarding speed, but this will consume some additional cpu resources."))
 compress.default="0"
 compress.rmempty=false
