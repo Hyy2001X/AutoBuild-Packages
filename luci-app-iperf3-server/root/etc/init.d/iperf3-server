@@ -1,27 +1,38 @@
 #!/bin/sh /etc/rc.common
 
 START=99
+USE_PROCD=1
 LOGGER="logger -t iPerf3"
 
-start_instance() {
+iperf3_header() {
+	local enabled port options
 	config_get_bool enabled $1 'enabled'
 	config_get port $1 'port' 5201
 	config_get options $1 'options'
-	if [ $enabled = 1 ]; then
-		$LOGGER "Starting iPerf3 server with port $port ..."
-		[ -n "$options" ] && $LOGGER "Extra options: [$options]"
-		iperf3 -s -D -p $port $options
+	Enabled=$enabled
+	Port=$port
+	Options=$options
+}
+
+start_service() {
+	local Enabled Port Options
+	config_load iperf3-server
+	config_foreach iperf3_header iperf3-server
+	if [ $Enabled == 1 ]
+	then
+		$LOGGER "Starting iPerf3 server with port $Port ..."
+		procd_open_instance
+    	procd_set_param command $(which iperf3) -s -D -p $Port $Options
+    	procd_set_param respawn
+		procd_close_instance
+	else
+		stop_service
 	fi
 }
 
-start() {
-	config_load iperf3-server
-	config_foreach start_instance iperf3-server
-}
-
-stop() {
+stop_service() {
 	$LOGGER "Stopping iPerf3 server ..."
-	kill -9 $(busybox ps | grep "iperf3 -s" | grep -v grep | awk '{print $1}')
+	kill -9 $(busybox ps | grep "iperf3 -s -D" | grep -v grep | awk '{print $1}')
 }
 
 service_triggers() {

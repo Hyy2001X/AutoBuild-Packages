@@ -5,7 +5,7 @@ include $(TOPDIR)/rules.mk
 LUCI_TITLE:=LuCI support for iPerf3 Server
 LUCI_DEPENDS:=+iperf3
 LUCI_PKGARCH:=all
-PKG_VERSION:=1.3
+PKG_VERSION:=1.4
 PKG_RELEASE:=1
 
 include $(TOPDIR)/feeds/luci/luci.mk
