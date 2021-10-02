@@ -5,8 +5,9 @@ Script_Command="bash $Script -u"
 
 start_instance() {
 	[[ ! -s $Script ]] && return 1
-	local enable proxy forceflash github autocheck week minute hour
+	local enable proxy forceflash github enable_autocheck autocheck week minute hour
 	config_get_bool enable $1 enable
+	config_get enable_autocheck $1 enable_autocheck
 	config_get autocheck $1 autocheck
 	if [[ $enable == 1 ]]; then
 		config_get proxy $1 proxy
@@ -21,7 +22,7 @@ start_instance() {
 		[[ $forceflash == 1 ]] && Script_Command="$Script_Command -F"
 		echo -e "$minute $hour * * $week $Script_Command		## AutoUpdate crontab 1" >> /etc/crontabs/root
 	fi
-	[[ $autocheck != 0 ]] && {
+	[[ $enable_autocheck == 1 ]] && {
 		echo -e "* */$autocheck * * * bash $Script -V Cloud > /tmp/Cloud_Version		## AutoUpdate crontab 2" >> /etc/crontabs/root
 		echo -e "* */$autocheck * * * bash $Script -v Cloud > /tmp/Cloud_Script_Version		## AutoUpdate crontab 2" >> /etc/crontabs/root
 	}
@@ -42,7 +43,7 @@ disable() {
 	uci set autoupdate.@autoupdate[0].enable=0
 	uci set autoupdate.@autoupdate[0].proxy=0
 	uci set autoupdate.@autoupdate[0].forceflash=0
-	uci set autoupdate.@autoupdate[0].autocheck=0
+	uci set autoupdate.@autoupdate[0].enable_autocheck=0
 	uci commit autoupdate
 }
 
