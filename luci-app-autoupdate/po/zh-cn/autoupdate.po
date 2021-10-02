@@ -1,34 +1,43 @@
 msgid "AutoUpdate"
 msgstr "定时更新"
 
+msgid "AutoUpdate LUCI supports scheduled upgrade & one-click firmware upgrade"
+msgstr "定时更新 LUCI 支持定时更新固件以及一键更新固件"
+
+msgid "Manually Upgrade"
+msgstr "手动更新"
+
+msgid "Manually upgrade Firmware or Script"
+msgstr "手动更新固件或脚本"
+
 msgid "Upgrade Log"
 msgstr "更新日志"
 
-msgid "Manual Upgrade"
-msgstr "手动更新"
-
-msgid "Manual upgrade Firmware,pause Check Updates button before Upgrade Firmware"
-msgstr "手动更新固件,更新前建议先点击检查更新按钮"
-
-msgid "Enable Preference Proxy"
+msgid "Preference Mirror Speedup"
 msgstr "镜像加速"
 
-msgid "Enable Force Flashing"
+msgid "Preference Mirror for speeding up downloads while upgrading (For Mainland)"
+msgstr "定时更新固件时优先启用镜像加速 (适用与被墙地区)"
+
+msgid "Preference Force Flashing"
 msgstr "强制刷写"
 
-msgid "Recommend to upgrade the firmware automatically at idle time"
-msgstr "建议设置定时更新时间为不常用的时间"
+msgid "Preference Force Flashing while firmware upgrading (DANGEROUS)"
+msgstr "定时更新固件时优先使用 -F 参数强制刷写固件 (危险)"
+
+msgid "Recommend to set AUTOUPDATE time at an idle time"
+msgstr "建议设置定时更新时间为设备不常用的时间"
 
 msgid "Enable AutoCheck Updates"
 msgstr "启用定时检查"
 
-msgid "When enabled, a cycle timing task is set separately to check for updates separately"
+msgid "When enabled, a cyclic task is set separately to Check Updates"
 msgstr "启用后,将单独设置一个循环定时任务用于单独检查更新"
 
 msgid "Check Freq"
 msgstr "检查更新频率"
 
-msgid "Check updates only period periodically"
+msgid "Check updates only period periodically in hours"
 msgstr "自动检查更新的时间间隔,以小时为单位"
 
 msgid "Update Day"
@@ -37,23 +46,14 @@ msgstr "更新日期"
 msgid "Github Url"
 msgstr "Github 地址"
 
-msgid "For detecting cloud firmware version and downloading firmware"
+msgid "For detecting cloud version and downloading firmware"
 msgstr "用于检测固件版本更新以及下载固件"
-
-msgid "Preference Force Flashing while firmware upgrading"
-msgstr "定时更新固件时优先使用 -F 参数强制刷写固件 (危险)"
-
-msgid "Preference Proxy for speeding up downloads (For Mainland)"
-msgstr "定时更新固件时优先启用镜像加速 (适用与被墙地区)"
-
-msgid "AutoUpdate LUCI supports one-click firmware upgrade and scheduled upgrade"
-msgstr "定时更新 LUCI 支持一键更新固件以及定时更新"
 
 msgid "Do Upgrade"
 msgstr "执行更新"
 
 msgid "Upgrade Firmware"
-msgstr "手动更新固件"
+msgstr "更新固件"
 
 msgid "Automatically update firmware during the specified time when Enabled"
 msgstr "启用后,将在指定时间段自动检查并更新固件"
@@ -64,7 +64,7 @@ msgstr "不保留配置更新固件"
 msgid "Common upgrade; Please wait patiently after clicking Do Upgrade button"
 msgstr "常规更新固件;点击执行更新后请耐心等待,期间不要刷新网页"
 
-msgid "This may solve some compatibility issues"
+msgid "Using the latest Script may solve some compatibility problems"
 msgstr "使用最新脚本也许能解决一些兼容性问题"
 
 msgid "Upgrade Script"

@@ -1,4 +1,5 @@
 #!/bin/bash /etc/rc.common
+
 START=99
 Script=/bin/AutoUpdate.sh
 Script_Command="bash $Script -u"
@@ -47,10 +48,6 @@ disable() {
 	uci commit autoupdate
 }
 
-service_triggers() {
-	procd_add_reload_trigger "autoupdate"
-}
-
 stop() {
 	remove_corntask
 }
@@ -59,4 +56,8 @@ start() {
 	remove_corntask
 	config_load autoupdate
 	config_foreach start_instance autoupdate
+}
+
+service_triggers() {
+	procd_add_reload_trigger "autoupdate"
 }

@@ -1,8 +1,8 @@
 config autoupdate
 	option enable '0'
+	option enable_autocheck '0'
 	option proxy '1'
 	option forceflash '0'
-	option autocheck '0'
 	option week '1'
 	option hour '5'
 	option minute '0'
