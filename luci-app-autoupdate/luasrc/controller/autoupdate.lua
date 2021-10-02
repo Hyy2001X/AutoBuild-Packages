@@ -1,7 +1,7 @@
 module("luci.controller.autoupdate",package.seeall)
 
 function index()
-	if not nixio.fs.access("/etc/config/iperf3-server") then
+	if not nixio.fs.access("/etc/config/autoupdate") then
 		return
 	end
 
