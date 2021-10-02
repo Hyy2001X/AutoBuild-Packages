@@ -23,7 +23,7 @@ msgid "Recommend to upgrade the firmware automatically at idle time"
 msgstr "建议设置定时更新时间为不常用的时间"
 
 msgid "Check Freq"
-msgstr "启用定时检查"
+msgstr "定时检查频率"
 
 msgid "Check updates only period periodically 0: Disable"
 msgstr "自动检查更新的时间间隔,以小时为单位 0: 禁用"

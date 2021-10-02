@@ -15,7 +15,7 @@ o = s:option(Flag, "enable", translate("Enable"),translate("Automatically update
 o.default = 0
 o.optional = false
 o = s:option(Flag, "proxy", translate("Enable Preference Proxy"),translate("Preference Proxy for speeding up downloads"))
-o.default = 0
+o.default = 1
 o.optional = false
 o = s:option(Flag, "forceflash", translate("Enable Force Flashing"),translate("Preference Force Flashing while firmware upgrading"))
 o.default = 0
@@ -36,9 +36,9 @@ hour = s:option(Value,"hour",translate("AutoUpdate Hour"))
 hour.datatype = "range(0,23)"
 hour.rmempty = false
 
-minutes = s:option(Value,"minute",translate("AutoUpdate Minute"))
-minutes.datatype = "range(0,59)"
-minutes.rmempty = false
+minute = s:option(Value,"minute",translate("AutoUpdate Minute"))
+minute.datatype = "range(0,59)"
+minute.rmempty = false
 
 autocheck = s:option(Value,"autocheck",translate("Check Freq"),translate("Check updates only period periodically 0: Disable"))
 autocheck.datatype = "range(0,23)"
