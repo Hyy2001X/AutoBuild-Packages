@@ -61,8 +61,11 @@ msgstr "启用后,将在指定时间段自动检查并更新固件"
 msgid "Upgrade without keeping System-Config"
 msgstr "不保留配置更新固件"
 
-msgid "Common upgrade; Please wait patiently after clicking Do Upgrade button"
-msgstr "常规更新固件;点击执行更新后请耐心等待,期间不要刷新网页"
+msgid "Upgrade with Force Flash (DANGEROUS)"
+msgstr "更新固件时使用 -F 参数强制刷写固件(危险)"
+
+msgid "Upgrade Normally (KEEP CONFIG)"
+msgstr "更新固件 (保留配置)"
 
 msgid "Using the latest Script may solve some compatibility problems"
 msgstr "使用最新脚本也许能解决一些兼容性问题"

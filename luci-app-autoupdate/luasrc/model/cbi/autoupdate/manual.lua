@@ -15,17 +15,24 @@ end
 local cloud_version = luci.sys.exec ("cat /tmp/Cloud_Version")
 local cloud_script_version = luci.sys.exec ("cat /tmp/Cloud_Script_Version")
 
-upgrade_firmware = s:option (Button, "_upgrade_firmware", translate("Upgrade Firmware"),translate("Common upgrade; Please wait patiently after clicking Do Upgrade button") .. "<br><br>当前固件版本: " .. local_version .. "<br>云端固件版本: " .. cloud_version)
-upgrade_firmware.inputtitle = translate ("Do Upgrade")
-upgrade_firmware.write = function()
-	luci.sys.call ("bash /bin/AutoUpdate.sh -u -P > /dev/null &")
+upgrade_fw = s:option (Button, "_upgrade_fw", translate("Upgrade Firmware"),translate("Upgrade Normally (KEEP CONFIG)") .. "<br><br>当前固件版本: " .. local_version .. "<br>云端固件版本: " .. cloud_version)
+upgrade_fw.inputtitle = translate ("Do Upgrade")
+upgrade_fw.write = function()
+	luci.sys.call ("bash /bin/AutoUpdate.sh -u > /dev/null &")
 	luci.http.redirect(luci.dispatcher.build_url("admin", "system", "autoupdate","log"))
 end
 
-upgrade_firmware_nonkeep = s:option (Button, "_upgrade_firmware_nonkeep", translate("Upgrade Firmware"),translate("Upgrade without keeping System-Config"))
-upgrade_firmware_nonkeep.inputtitle = translate ("Do Upgrade")
-upgrade_firmware_nonkeep.write = function()
+upgrade_fw_n = s:option (Button, "_upgrade_fw_n", translate("Upgrade Firmware"),translate("Upgrade without keeping System-Config"))
+upgrade_fw_n.inputtitle = translate ("Do Upgrade")
+upgrade_fw_n.write = function()
 	luci.sys.call ("bash /bin/AutoUpdate.sh -u -n > /dev/null &")
+	luci.http.redirect(luci.dispatcher.build_url("admin", "system", "autoupdate","log"))
+end
+
+upgrade_fw_force = s:option (Button, "_upgrade_fw_force", translate("Upgrade Firmware"),translate("Upgrade with Force Flash (DANGEROUS)"))
+upgrade_fw_force.inputtitle = translate ("Do Upgrade")
+upgrade_fw_force.write = function()
+	luci.sys.call ("bash /bin/AutoUpdate.sh -u -F > /dev/null &")
 	luci.http.redirect(luci.dispatcher.build_url("admin", "system", "autoupdate","log"))
 end
 
