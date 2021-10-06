@@ -76,5 +76,5 @@ msgstr "更新脚本"
 msgid "Check Updates"
 msgstr "检查更新"
 
-msgid "Please Refresh the page after clicking Check Updates button"
-msgstr "点击检查更新后请刷新页面以显示最新版本"
+msgid "Please wait for the page to refresh after clicking Check Updates button"
+msgstr "点击检查更新按钮后请等待页面自动刷新"

@@ -5,11 +5,12 @@ s.anonymous = true
 local local_version = luci.sys.exec ("bash /bin/AutoUpdate.sh -V")
 local local_script_version = luci.sys.exec ("bash /bin/AutoUpdate.sh -v")
 
-check_updates = s:option (Button, "_check_updates", translate("Check Updates"),translate("Please Refresh the page after clicking Check Updates button"))
+check_updates = s:option (Button, "_check_updates", translate("Check Updates"),translate("Please wait for the page to refresh after clicking Check Updates button"))
 check_updates.inputtitle = translate ("Check Updates")
 check_updates.write = function()
 	luci.sys.call ("bash /bin/AutoUpdate.sh -V Cloud > /tmp/Cloud_Version")
 	luci.sys.call ("bash /bin/AutoUpdate.sh -v Cloud > /tmp/Cloud_Script_Version")
+	luci.http.redirect(luci.dispatcher.build_url("admin", "system", "autoupdate","manual"))
 end
 
 local cloud_version = luci.sys.exec ("cat /tmp/Cloud_Version")
