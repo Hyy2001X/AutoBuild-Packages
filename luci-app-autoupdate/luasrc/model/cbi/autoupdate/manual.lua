@@ -1,4 +1,4 @@
-m = Map("autoupdate",translate("Manual Upgrade"),translate("Manually upgrade Firmware or Script"))
+m = Map("autoupdate",translate("Manually Upgrade"),translate("Manually upgrade Firmware or Script"))
 s = m:section(TypedSection,"autoupdate")
 s.anonymous = true
 

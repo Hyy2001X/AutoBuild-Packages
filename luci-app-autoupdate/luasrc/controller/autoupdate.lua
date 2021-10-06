@@ -6,7 +6,7 @@ function index()
 	end
 	entry({"admin", "system", "autoupdate"}, alias("admin", "system", "autoupdate", "main"),_("AutoUpdate"), 99).dependent = true
 	entry({"admin", "system", "autoupdate", "main"}, cbi("autoupdate/main"),_("AutoUpdate"), 10).leaf = true
-	entry({"admin", "system", "autoupdate", "manual"}, cbi("autoupdate/manual"),_("Manual Upgrade"), 20).leaf = true
+	entry({"admin", "system", "autoupdate", "manual"}, cbi("autoupdate/manual"),_("Manually Upgrade"), 20).leaf = true
 	entry({"admin", "system", "autoupdate", "log"}, form("autoupdate/log"),_("Upgrade Log"), 30).leaf = true
 
 	entry({"admin", "system", "autoupdate", "print_log"}, call("print_log")).leaf = true
