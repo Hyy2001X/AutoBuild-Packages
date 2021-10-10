@@ -52,9 +52,4 @@ autocheck.datatype = "range(1,23)"
 autocheck.rmempty = true
 autocheck:depends("enable_autocheck", "1")
 
-local e = luci.http.formvalue("cbi.apply")
-if e then
-	io.popen("/etc/init.d/autoupdate restart")
-end
-
 return m

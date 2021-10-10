@@ -6,7 +6,7 @@ LUCI_TITLE:=LuCI Support for AutoUpdate.sh
 LUCI_DEPENDS:=+bash
 LUCI_PKGARCH:=all
 PKG_VERSION:=1.1
-PKG_RELEASE:=20211006
+PKG_RELEASE:=20211010
 
 include $(TOPDIR)/feeds/luci/luci.mk
 

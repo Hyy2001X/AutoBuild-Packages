@@ -10,10 +10,10 @@ start_instance() {
 	config_get_bool enable $1 enable
 	config_get enable_autocheck $1 enable_autocheck
 	config_get autocheck $1 autocheck
+	config_get github $1 github
 	if [[ $enable == 1 ]]; then
 		config_get proxy $1 proxy
 		config_get forceflash $1 forceflash
-		config_get github $1 github
 		config_get week $1 week
 		config_get minute $1 minute
 		config_get hour $1 hour
@@ -29,7 +29,6 @@ start_instance() {
 	}
 	/etc/init.d/cron restart
 	bash $Script -C $github > /dev/null 2>&1
-	bash $Script --clean > /dev/null 2>&1
 }
 
 remove_corntask() {
