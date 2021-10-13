@@ -11,7 +11,7 @@ end
 
 function act_status()
 	local e = {}
-	e.running = luci.sys.call("busybox ps | grep 'iperf3 -s' | grep -v grep > /dev/null") == 0
+	e.running = luci.sys.call("busybox ps | grep 'iperf3 -s -D' | grep -v grep > /dev/null") == 0
 	luci.http.prepare_content("application/json")
 	luci.http.write_json(e)
 end

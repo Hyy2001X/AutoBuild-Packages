@@ -1,4 +1,4 @@
 
 config iperf3-server
-	option enabled '0'
+	option enable '0'
 	option port '5201'

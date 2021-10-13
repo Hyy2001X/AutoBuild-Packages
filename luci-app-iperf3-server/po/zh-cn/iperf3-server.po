@@ -10,7 +10,7 @@ msgstr "端口"
 msgid "iPerf3 Server"
 msgstr "iPerf3 服务器"
 
-msgid "Server port to listen on"
+msgid "iPerf3 Server listening port"
 msgstr "iPerf3 服务端监听端口"
 
 msgid "Extra options"

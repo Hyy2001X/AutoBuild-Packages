@@ -5,20 +5,19 @@ USE_PROCD=1
 LOGGER="logger -t iPerf3"
 
 iperf3_header() {
-	local enabled port options
-	config_get_bool enabled $1 'enabled'
+	local enable port options
+	config_get_bool enable $1 'enable'
 	config_get port $1 'port' 5201
 	config_get options $1 'options'
-	Enabled=$enabled
+	Enable=$enable
 	Port=$port
 	Options=$options
 }
 
 start_service() {
-	local Enabled Port Options
 	config_load iperf3-server
 	config_foreach iperf3_header iperf3-server
-	if [ $Enabled == 1 ]
+	if [ $Enable == 1 ]
 	then
 		$LOGGER "Starting iPerf3 server with port $Port ..."
 		procd_open_instance
