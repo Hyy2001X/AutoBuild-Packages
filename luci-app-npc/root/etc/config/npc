@@ -1,10 +1,6 @@
 
 config npc
-	option enabled '0'
+	option enable '0'
 	option server_addr '1.2.3.4'
-	option server_port '8024'
-	option protocol 'tcp'
-	option compress '0'
-	option crypt '0'
 	option vkey 'abcdefg'
-	option log_level '4'
+
