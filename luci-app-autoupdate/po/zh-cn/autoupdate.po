@@ -28,26 +28,14 @@ msgstr "定时更新固件时优先使用 -F 参数强制刷写固件 (危险)"
 msgid "Recommend to set AUTOUPDATE time at an idle time"
 msgstr "建议设置定时更新时间为设备不常用的时间"
 
-msgid "Enable AutoCheck Updates"
-msgstr "启用定时检查"
-
-msgid "When enabled, a cyclic task is set separately to Check Updates"
-msgstr "启用后,将单独设置一个循环定时任务用于单独检查更新"
-
-msgid "Check Freq"
-msgstr "检查更新频率"
-
-msgid "Check updates only period periodically in hours"
-msgstr "自动检查更新的时间间隔,以小时为单位"
-
 msgid "Update Day"
-msgstr "更新日期"
+msgstr "更新时间"
 
 msgid "Github Url"
 msgstr "Github 地址"
 
 msgid "For detecting cloud version and downloading firmware"
-msgstr "用于检测固件版本更新以及下载固件"
+msgstr "用于检测固件版本更新以及下载固件的地址"
 
 msgid "Do Upgrade"
 msgstr "执行更新"
