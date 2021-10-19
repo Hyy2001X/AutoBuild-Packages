@@ -9,7 +9,7 @@ msgid "Manual Config"
 msgstr "手动设置"
 
 msgid "Free and open source, powerful network-wide ads & trackers blocking DNS server."
-msgstr "免费开源，功能强大的网络广告和跟踪程序拦截 DNS 服务器"
+msgstr "免费开源,功能强大的网络广告和跟踪程序拦截 DNS 服务器"
 
 msgid "RUNNING"
 msgstr "运行中"
@@ -102,7 +102,7 @@ msgid "try even more compression variants [very slow]"
 msgstr "尝试更多变体压缩手段[很慢]"
 
 msgid "bin use less space,but may have compatibility issues"
-msgstr "减小执行文件空间占用，但是压缩后可能有兼容性问题,部分平台可能无法正常使用"
+msgstr "减小执行文件空间占用,但是压缩后可能有兼容性问题,部分平台可能无法正常使用"
 
 msgid "Config Path"
 msgstr "配置文件路径"
@@ -120,7 +120,7 @@ msgid "Runtime log file"
 msgstr "运行日志路径"
 
 msgid "AdGuardHome runtime Log file if 'syslog': write to system log;if empty no log"
-msgstr "AdGuardHome 运行日志,如果填 syslog 将写入系统日志；如果该项为空则不记录运行日志"
+msgstr "AdGuardHome 运行日志,如果填 syslog 将写入系统日志;如果该项为空则不记录运行日志"
 
 msgid "Verbose log"
 msgstr "输出详细日志"
@@ -245,7 +245,7 @@ msgid "Reload Config"
 msgstr "重新载入配置"
 
 msgid "WARNING!!! no bin found apply config will not be test"
-msgstr "警告！！！未找到执行文件，提交配置将不会进行校验"
+msgstr "警告!!!未找到执行文件,提交配置将不会进行校验"
 
 msgid "Change browser management username"
 msgstr "更改网页登录用户名"
