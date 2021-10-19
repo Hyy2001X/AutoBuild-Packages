@@ -47,10 +47,10 @@ msgid "Automatically update firmware during the specified time when Enabled"
 msgstr "启用后,将在指定时间段自动检查并更新固件"
 
 msgid "Upgrade without keeping System-Config"
-msgstr "不保留配置更新固件"
+msgstr "更新固件 (不保留配置)"
 
-msgid "Upgrade with Force Flash (DANGEROUS)"
-msgstr "更新固件时使用 -F 参数强制刷写固件(危险)"
+msgid "Upgrade with Force Flashing (DANGEROUS)"
+msgstr "更新固件且强制刷入固件 (危险)"
 
 msgid "Upgrade Normally (KEEP CONFIG)"
 msgstr "更新固件 (保留配置)"

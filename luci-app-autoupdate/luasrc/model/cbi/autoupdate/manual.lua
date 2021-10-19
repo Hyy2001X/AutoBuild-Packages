@@ -23,17 +23,17 @@ upgrade_fw.write = function()
 	luci.http.redirect(luci.dispatcher.build_url("admin", "system", "autoupdate","log"))
 end
 
+upgrade_fw_force = s:option (Button, "_upgrade_fw_force", translate("Upgrade Firmware"),translate("Upgrade with Force Flashing (DANGEROUS)"))
+upgrade_fw_force.inputtitle = translate ("Do Upgrade")
+upgrade_fw_force.write = function()
+	luci.sys.call ("bash /bin/AutoUpdate.sh -u -F > /dev/null &")
+	luci.http.redirect(luci.dispatcher.build_url("admin", "system", "autoupdate","log"))
+end
+
 upgrade_fw_n = s:option (Button, "_upgrade_fw_n", translate("Upgrade Firmware"),translate("Upgrade without keeping System-Config"))
 upgrade_fw_n.inputtitle = translate ("Do Upgrade")
 upgrade_fw_n.write = function()
 	luci.sys.call ("bash /bin/AutoUpdate.sh -u -n > /dev/null &")
-	luci.http.redirect(luci.dispatcher.build_url("admin", "system", "autoupdate","log"))
-end
-
-upgrade_fw_force = s:option (Button, "_upgrade_fw_force", translate("Upgrade Firmware"),translate("Upgrade with Force Flash (DANGEROUS)"))
-upgrade_fw_force.inputtitle = translate ("Do Upgrade")
-upgrade_fw_force.write = function()
-	luci.sys.call ("bash /bin/AutoUpdate.sh -u -F > /dev/null &")
 	luci.http.redirect(luci.dispatcher.build_url("admin", "system", "autoupdate","log"))
 end
 
