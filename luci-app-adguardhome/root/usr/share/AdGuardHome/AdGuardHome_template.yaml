@@ -6,11 +6,12 @@ bind_port: 3000
 beta_bind_port: 0
 users:
 - name: root
-  password: $2y$10$dGa3/IOphOk9oTcf1NZd4OcYxzxpNYyV13xjG7Rud7kRpZQFOJxVu
+  password: $2a$10$rYaGunOdH6N62SDycg3rQO1POzr39lXF8vHZ/28wkJq3RY69DJYT2
 auth_attempts: 5
 block_auth_min: 15
 http_proxy: ""
 language: ""
+rlimit_nofile: 0
 debug_pprof: false
 web_session_ttl: 720
 dns:
@@ -20,11 +21,11 @@ dns:
   statistics_interval: 90
   querylog_enabled: true
   querylog_file_enabled: true
-  querylog_interval: 24h
+  querylog_interval: 1
   querylog_size_memory: 1000
   anonymize_client_ip: false
   protection_enabled: true
-  blocking_mode: nxdomain
+  blocking_mode: default
   blocking_ipv4: ""
   blocking_ipv6: ""
   blocked_response_ttl: 10
@@ -32,31 +33,26 @@ dns:
   safebrowsing_block_host: standard-block.dns.adguard.com
   ratelimit: 0
   ratelimit_whitelist: []
-  refuse_any: false
+  refuse_any: true
   upstream_dns:
   - https://dns.alidns.com/dns-query
   - tls://dns.alidns.com
   - 114.114.114.114
   - 223.5.5.5
-  - tcp://223.5.5.5
   upstream_dns_file: ""
   bootstrap_dns:
 #bootstrap_dns
   all_servers: true
   fastest_addr: false
   allowed_clients: []
-  disallowed_clients:
+  disallowed_clients: []
   blocked_hosts:
   - version.bind
   - id.server
   - hostname.bind
-  trusted_proxies:
-  - 127.0.0.0/8
-  - ::1/128
-  cache_size: 4096
+  cache_size: 4194304
   cache_ttl_min: 0
   cache_ttl_max: 0
-  cache_optimistic: false
   bogus_nxdomain: []
   aaaa_disabled: true
   enable_dnssec: true
@@ -74,18 +70,16 @@ dns:
   cache_time: 30
   rewrites: []
   blocked_services: []
-  upstream_timeout: 10s
   local_domain_name: lan
   resolve_clients: false
-  use_private_ptr_resolvers: false
   local_ptr_upstreams: []
 tls:
   enabled: false
   server_name: ""
   force_https: false
-  port_https: 0
+  port_https: 443
   port_dns_over_tls: 853
-  port_dns_over_quic: 0
+  port_dns_over_quic: 784
   port_dnscrypt: 0
   dnscrypt_config_file: ""
   allow_unencrypted_doh: false
@@ -99,7 +93,7 @@ filters:
   url: https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt
   name: AdGuard Home
   id: 1
-- enabled: false
+- enabled: true
   url: https://banbendalao.coding.net/p/adgk/d/ADgk/git/raw/master/ADgk.txt
   name: AD-gk
   id: 2
@@ -131,20 +125,7 @@ dhcp:
     lease_duration: 86400
     ra_slaac_only: false
     ra_allow_slaac: false
-clients:
-- name: OpenWrt
-  tags:
-  - os_linux
-  ids:
-  - 127.0.0.1
-  use_global_settings: true
-  filtering_enabled: false
-  parental_enabled: false
-  safesearch_enabled: false
-  safebrowsing_enabled: false
-  use_global_blocked_services: true
-  blocked_services: []
-  upstreams: []
+clients: []
 log_compress: false
 log_localtime: false
 log_max_backups: 0
@@ -152,8 +133,4 @@ log_max_size: 100
 log_max_age: 3
 log_file: ""
 verbose: false
-os:
-  group: ""
-  user: ""
-  rlimit_nofile: 0
-schema_version: 12
+schema_version: 10
