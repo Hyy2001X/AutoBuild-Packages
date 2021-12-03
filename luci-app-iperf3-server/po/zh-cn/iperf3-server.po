@@ -1,8 +1,5 @@
-msgid "Enabled"
-msgstr "启用"
-
 msgid "iPerf - The ultimate speed test tool for TCP, UDP and SCTP"
-msgstr "iPerf 一款集 TCP UDP 和 SCTP 于的一身的终极速度测试工具"
+msgstr "iPerf3 是一款集 TCP UDP 和 SCTP 于的一身的终极速度测试工具"
 
 msgid "Port"
 msgstr "端口"

@@ -1,4 +1,5 @@
 module("luci.controller.npc",package.seeall)
+
 function index()
 	if not nixio.fs.access("/etc/config/npc") then
 		return
