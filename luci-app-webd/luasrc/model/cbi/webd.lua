@@ -22,7 +22,7 @@ enable_ipv6 = s:option(Flag, "enable_ipv6", translate("Listen IPv6"), translatef
 enable_ipv6.default = 0
 
 root = s:option(Value, "webd_root", translate("Listening Directory"), translatef("Directory of Webd Netdisk"))
-root.placeholder = "/mnt"
+root.default = "/mnt"
 root.rmempty = false
 
 enable_recyclebin = s:option(Flag, "enable_recyclebin", translate("Recycle Bin"), translatef("Automatically create recycle bin directory"))
