@@ -2,26 +2,17 @@
 
 START=99
 USE_PROCD=1
-LOGGER="logger -t iPerf3"
-
-iperf3_header() {
-	local enable port options
-	config_get_bool enable $1 'enable'
-	config_get port $1 'port' 5201
-	config_get options $1 'options'
-	Enable=$enable
-	Port=$port
-	Options=$options
-}
+LOGGER="logger -t [iPerf3]"
 
 start_service() {
-	config_load iperf3-server
-	config_foreach iperf3_header iperf3-server
-	if [ $Enable == 1 ]
+	local enable="$(uci_get_by_type iperf3-server 0 enable)"
+	local port="$(uci_get_by_type iperf3-server 0 port)"
+	local options="$(uci_get_by_type iperf3-server 0 options)"
+	if [ $enable == 1 ]
 	then
-		$LOGGER "Starting iPerf3 server with port $Port ..."
+		$LOGGER "Starting iPerf3 Server with port $port ..."
 		procd_open_instance
-    	procd_set_param command $(which iperf3) -s -D -p $Port $Options
+    	procd_set_param command $(command -v iperf3) -s -p $port $options
     	procd_set_param respawn
 		procd_close_instance
 	else
@@ -29,9 +20,14 @@ start_service() {
 	fi
 }
 
+uci_get_by_type() {
+	local ret=$(uci get iperf3-server.@$1[$2].$3 2>/dev/null)
+	echo ${ret:=$4}
+}
+
 stop_service() {
-	$LOGGER "Stopping iPerf3 server ..."
-	kill -9 $(busybox ps | grep "iperf3 -s -D" | grep -v grep | awk '{print $1}')
+	$LOGGER "Stopping iPerf3 Server ..."
+	killall iperf3
 }
 
 service_triggers() {
