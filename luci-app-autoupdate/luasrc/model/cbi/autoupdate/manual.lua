@@ -13,8 +13,8 @@ check_updates.write = function()
 	luci.http.redirect(luci.dispatcher.build_url("admin", "system", "autoupdate","manual"))
 end
 
-local cloud_version = luci.sys.exec ("cat /tmp/Cloud_Version")
-local cloud_script_version = luci.sys.exec ("cat /tmp/Cloud_Script_Version")
+local cloud_version = luci.sys.exec ("cat /tmp/Cloud_Version 2> /dev/null")
+local cloud_script_version = luci.sys.exec ("cat /tmp/Cloud_Script_Version 2> /dev/null")
 
 upgrade_fw = s:option (Button, "_upgrade_fw", translate("Upgrade Firmware"),translate("Upgrade Normally (KEEP CONFIG)") .. "<br><br>当前固件版本: " .. local_version .. "<br>云端固件版本: " .. cloud_version)
 upgrade_fw.inputtitle = translate ("Do Upgrade")

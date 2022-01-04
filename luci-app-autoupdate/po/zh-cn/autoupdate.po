@@ -40,6 +40,9 @@ msgstr "Github 地址"
 msgid "For detecting cloud version and downloading firmware"
 msgstr "用于检测固件版本更新以及下载固件的地址"
 
+msgid "Firmware Flag"
+msgstr "固件标签"
+
 msgid "Do Upgrade"
 msgstr "执行更新"
 
