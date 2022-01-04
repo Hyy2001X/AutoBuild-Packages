@@ -2,7 +2,10 @@ msgid "AutoUpdate"
 msgstr "固件更新"
 
 msgid "AutoUpdate LUCI supports scheduled upgrade & one-click firmware upgrade"
-msgstr "定时更新 LUCI 支持定时更新固件以及一键更新固件"
+msgstr "固件更新 LUCI 支持定时更新固件 & 一键更新固件"
+
+msgid "Scheduled Upgrade"
+msgstr "定时更新"
 
 msgid "Manually Upgrade"
 msgstr "手动更新"
