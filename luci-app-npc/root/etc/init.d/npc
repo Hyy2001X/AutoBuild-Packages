@@ -1,69 +1,67 @@
 #!/bin/sh /etc/rc.common
-# Copyright (C) 2006-2011 OpenWrt.org
 
 START=95
 USE_PROCD=1
+LOGGER="logger -t [NPC]"
 
-npc_Path="$(which npc)"
-tmp_Conf="/tmp/etc/npc.conf"
-
-npc_header() {
-	local enable server_addr server_port protocol vkey max_conn rate_limit flow_limit compress crypt
-
-	config_get_bool enable $1 enable
-	config_get server_addr $1 server_addr
-	config_get server_port $1 server_port
-	config_get protocol $1 protocol
-	config_get vkey $1 vkey
-	config_get max_conn $1 max_conn
-	config_get rate_limit $1 rate_limit
-	config_get flow_limit $1 flow_limit
-	config_get compress $1 compress
-	config_get crypt $1 crypt
-
-	[ -f "$tmp_Conf" ] && rm -f $tmp_Conf
-	echo "[common]" > $tmp_Conf
-	echo "server_addr=${server_addr}:${server_port}" >> $tmp_Conf
-	echo "conn_type=${protocol}" >> $tmp_Conf
-	echo "vkey=${vkey}" >> $tmp_Conf
-	echo "auto_reconnection=true" >> $tmp_Conf
-	[ -n "$max_conn" ] && echo "max_conn=${max_conn}" >> $tmp_Conf
-	[ -n "$rate_limit" ] && echo "rate_limit=${rate_limit}" >> $tmp_Conf
-	[ -n "$flow_limit" ] && echo "flow_limit=${flow_limit}" >> $tmp_Conf
-	npc_write_bool compress $1
-	npc_write_bool crypt $1
-
-	Enable=$enable
-}
-
-npc_write_bool() {
-	local opt="$1"
-	local config="$2"
-	local val
-
-	config_get_bool val $config "$opt"
-	if [ "$val" -eq 0 ]; then
-		echo "${opt}=false" >> $tmp_Conf
-	else
-		echo "${opt}=true" >> $tmp_Conf
-	fi
-}
+npc_Path="$(command -v npc)"
+conf_Path="/tmp/etc/npc.conf"
 
 start_service() {
-	config_load npc
-	config_foreach npc_header npc
+	local basic_list="enable server_addr server_port protocol vkey max_conn rate_limit flow_limit compress crypt"
+	for i in $(echo $basic_list);do
+		local eval $i="$(uci_get_by_type npc 0 $i)"
+	done;unset i
 
-	if [ "$Enable" = 1 ];then
-		logger -t NPS 'Starting NPS Client ...'
+	[ -s "$conf_Path" ] && rm -f $conf_Path
+	echo "[common]" > $conf_Path || {
+		${LOGGER} "Failed to create config,exit ..."
+		exit 1
+	}
+	echo "server_addr=${server_addr}:${server_port}" >> $conf_Path
+	echo "conn_type=${protocol}" >> $conf_Path
+	echo "vkey=${vkey}" >> $conf_Path
+	echo "auto_reconnection=true" >> $conf_Path
+	[ -n "$max_conn" ] && echo "max_conn=${max_conn}" >> $conf_Path
+	[ -n "$rate_limit" ] && echo "rate_limit=${rate_limit}" >> $conf_Path
+	[ -n "$flow_limit" ] && echo "flow_limit=${flow_limit}" >> $conf_Path
+	conf_write_bool compress $compress
+	conf_write_bool crypt $crypt
+
+	if [ "$enable" = 1 ]
+	then
+		${LOGGER} "Starting NPS Client(NPC) ..."
 		procd_open_instance
-    		procd_set_param command $npc_Path -config=$tmp_Conf 
-    		procd_set_param respawn
-    		procd_set_param stdout 1
-    		procd_set_param stderr 1
-    		procd_close_instance
+    	procd_set_param command $npc_Path -config=$conf_Path
+    	procd_set_param respawn
+    	procd_set_param stdout 1
+    	procd_set_param stderr 1
+    	procd_close_instance
+	else
+		${LOGGER} "NPS Client(NPC) Service is now disabled ..."
 	fi
+}
+
+stop_service() {
+	$LOGGER "Stopping NPS Client(NPC) ..."
+	rm -f $conf_Path
 }
 
 service_triggers() {
-        procd_add_reload_trigger "npc"
+	procd_add_reload_trigger "npc"
+}
+
+conf_write_bool() {
+	if [ "$2" == 0 ]
+	then
+		echo "$1=false" >> $conf_Path
+	else
+		echo "$1=true" >> $conf_Path
+	fi
+	return
+}
+
+uci_get_by_type() {
+	local ret=$(uci get npc.@$1[$2].$3 2>/dev/null)
+	echo ${ret:=$4}
 }

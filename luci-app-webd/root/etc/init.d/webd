@@ -9,20 +9,19 @@ start_service() {
 	local users_list="enable_read enable_read_list enable_upload enable_move enable_showhide"
 	for i in $(echo $basic_list);do
 		local eval $i="$(uci_get_by_type webd 0 $i)"
-	done
-	unset i
+	done;unset i
 	if [ "$enable" == 1 ]
 	then
-		[ ! -r "$webd_root" -o ! -d "$webd_root" ] && EXIT "Unable to access $webd_root ..."
-		[ ! -x "$webd_bin" ] && EXIT "Unable to access $webd_bin ..."
+		[ ! -r "$webd_root" -o ! -d "$webd_root" ] && EXIT "Unable to access $webd_root,exit ..."
+		[ ! -x "$webd_bin" ] && EXIT "Unable to access $webd_bin,exit ..."
 		if [ "$enable_recyclebin" == 1 -a ! -d "$webd_root/.Trash" ]
 		then
 			${LOGGER} "Creating Recycle-Bin directory ..."
-			mkdir -p $webd_root/.Trash || EXIT "Failed to create Recycle Bin directory ..."
+			mkdir -p $webd_root/.Trash || EXIT "Failed to create Recycle Bin directory,exit ..."
 		fi
 		${LOGGER} "Removing old config ..."
 		rm $webd_conf
-		touch -a $webd_conf || EXIT "Failed to create new config ..."
+		touch -a $webd_conf || EXIT "Failed to create config,exit ..."
 		[ "$enable_ipv6" == 1 ] && webd_port="[::]:${webd_port}"
 		if [ "$enable_anonymous" != 0 ]
 		then
@@ -45,7 +44,7 @@ start_service() {
 			local password=$(uci_get_by_type users $u password)
 			if [ -n "$username" ]
 			then
-				eval perm=$(converter $(eval echo '$'perm_bin) | tail -n 1)
+				eval perm=$(perm_converter $(eval echo '$'perm_bin) | tail -n 1)
 				if [ -n "$(eval echo '$'perm)" ]
 				then
 					${LOGGER} "Creating account for User $username ..."
@@ -58,25 +57,21 @@ start_service() {
 				unset perm_bin
 			fi
 		done 
-		
-		[ -n "$(pgrep webd)" ] && stop
+		[ -n "$(pgrep webd)" ] && pgrep webd | xargs kill -9
 		${LOGGER} "Starting Webd Netdisk Service ..."
 		procd_open_instance
-		procd_set_param respawn
 		procd_set_param command $webd_bin -c $webd_conf
+		procd_set_param respawn
 		procd_close_instance
 	else
-		stop
-		EXIT "Webd Netdisk Service is disabled ..."
+		stop_service
+		${LOGGER} "Webd Netdisk Service is now disabled ..."
 	fi
 }
 
-
-stop() {
+stop_service() {
 	${LOGGER} "Stopping Webd Netdisk Service ..."
-	webd_bin=$(uci_get_by_type webd 0 webd_bin)
-	[ -z "${webd_bin}" ] && webd_bin=/usr/bin/webd
-	service_stop $webd_bin
+	pgrep webd | xargs kill -9
 }
 
 service_triggers() {
@@ -90,10 +85,10 @@ uci_get_by_type() {
 
 EXIT() {
 	${LOGGER} $*
-	exit 1
+	exit
 }
 
-converter() {
+perm_converter() {
 	local u i=1
 	echo $1 | egrep -o [0-1] | while read X
 	do

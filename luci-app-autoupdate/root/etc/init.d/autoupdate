@@ -1,43 +1,57 @@
-#!/bin/bash /etc/rc.common
+#!/bin/sh /etc/rc.common
 
 START=99
+LOGGER="logger -t [AutoUpdate]"
 
-start_instance() {
-	local enable proxy forceflash github week minute hour
-	config_get_bool enable $1 enable
-	config_get github $1 github
-	Script="/bin/AutoUpdate.sh"
-	Script_Command="bash $Script -u"
-	if [[ $enable == 1 ]]; then
-		config_get proxy $1 proxy
-		config_get forceflash $1 forceflash
-		config_get week $1 week
-		config_get minute $1 minute
-		config_get hour $1 hour
-		[[ $week == 7 ]] && week='*'
-		[[ $proxy == 1 ]] && Script_Command="$Script_Command -P"
-		[[ $forceflash == 1 ]] && Script_Command="$Script_Command -F"
-		echo -e "$minute $hour * * $week $Script_Command		## AutoUpdate crontab" >> /etc/crontabs/root
+script_Path="/bin/AutoUpdate.sh"
+script_Cmd="bash $script_Path -u"
+
+start() {
+	local basic_list="enable proxy forceflash github week minute hour"
+	for i in $(echo $basic_list);do
+		local eval $i="$(uci_get_by_type autoupdate 0 $i)"
+	done;unset i
+	if [ ! -f "${script_Path}" ]
+	then
+		${LOGGER} "Unable to access AutoUpdate Script,exit ..."
+		stop
+		exit 1
+	else
+		chmod 777 ${script_Path} 2> /dev/null
 	fi
-	/etc/init.d/cron restart
-	bash $Script -C $github > /dev/null 2>&1
+	if [ "$enable" == 1 ]
+	then
+		[ "$week" == 7 ] && week='*'
+		[ "$proxy" == 1 ] && script_Cmd="$script_Cmd -P"
+		[ "$forceflash" == 1 ] && script_Cmd="$script_Cmd -F"
+		${LOGGER} "Creating corn_task [$minute $hour * * $week $script_Cmd] ..."
+		echo "$minute $hour * * $week $script_Cmd		## AutoUpdate crontab" >> /etc/crontabs/root
+		/etc/init.d/cron restart
+	else
+		${LOGGER} "AutoUpdate Service is now disabled ..."
+		stop
+	fi
+	${LOGGER} "Resetting Github URL to $github ..."
+	$script_Path -C $github > /dev/null 2>&1
 }
 
-remove_corntask() {
+stop() {
+	${LOGGER} "Removing all corn_task ..."
 	sed -i '/## AutoUpdate crontab/d' /etc/crontabs/root 2> /dev/null
 	/etc/init.d/cron restart
 }
 
-stop() {
-	remove_corntask
-}
-
-start() {
-	remove_corntask
-	config_load autoupdate
-	config_foreach start_instance autoupdate
+disable() {
+	${LOGGER} "Disabling AutoUpdate Service ..."
+	uci set autoupdate.@autoupdate[0].enable="0" 2> /dev/null
+	stop
 }
 
 service_triggers() {
 	procd_add_reload_trigger "autoupdate"
+}
+
+uci_get_by_type() {
+	local ret=$(uci get autoupdate.@$1[$2].$3 2>/dev/null)
+	echo ${ret:=$4}
 }
