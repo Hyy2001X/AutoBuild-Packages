@@ -2,11 +2,11 @@
 
 include $(TOPDIR)/rules.mk
 
-LUCI_TITLE:=LuCI Support for AutoUpdate.sh
+LUCI_TITLE:=LuCI Support for AutoUpdate Script
 LUCI_DEPENDS:=+bash +jq
 LUCI_PKGARCH:=all
-PKG_VERSION:=2.0
-PKG_RELEASE:=20211207
+PKG_VERSION:=2.1
+PKG_RELEASE:=1
 
 include $(TOPDIR)/feeds/luci/luci.mk
 
