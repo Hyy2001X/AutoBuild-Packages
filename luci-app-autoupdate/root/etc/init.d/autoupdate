@@ -7,7 +7,7 @@ script_Path="/bin/AutoUpdate.sh"
 script_Cmd="bash $script_Path -u"
 
 start() {
-	local basic_list="enable proxy forceflash github flag week minute hour"
+	local basic_list="enable proxy mirror forceflash github flag week minute hour"
 	for i in $(echo $basic_list);do
 		local eval $i="$(uci_get_by_type autoupdate 0 $i)"
 	done;unset i
@@ -22,7 +22,7 @@ start() {
 	if [ "$enable" == 1 ]
 	then
 		[ "$week" == 7 ] && week='*'
-		[ "$proxy" == 1 ] && script_Cmd="$script_Cmd -P"
+		[ "$proxy" == 1 ] && script_Cmd="$script_Cmd -P $mirror"
 		[ "$forceflash" == 1 ] && script_Cmd="$script_Cmd -F"
 		${LOGGER} "Creating corn_task [$minute $hour * * $week $script_Cmd] ..."
 		echo "$minute $hour * * $week $script_Cmd		## AutoUpdate crontab" >> /etc/crontabs/root

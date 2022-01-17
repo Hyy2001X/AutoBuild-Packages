@@ -20,6 +20,14 @@ proxy.default = 1
 proxy:depends("enable", "1")
 proxy.optional = false
 
+proxy_type = s:option(ListValue, "mirror", translate("Mirror Station"))
+proxy_type.default = "A"
+proxy_type:value("A", translate("Automatic selection (Recommend)"))
+proxy_type:value("G", translate("Ghproxy (Maybe faster)"))
+proxy_type:value("F", translate("FastGit"))
+proxy_type:depends("proxy", "1")
+proxy_type.optional = false
+
 forceflash = s:option(Flag, "forceflash", translate("Preference Force Flashing"), translate("Preference Force Flashing while firmware upgrading (DANGEROUS)"))
 forceflash.default = 0
 forceflash:depends("enable", "1")

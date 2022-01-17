@@ -19,6 +19,18 @@ msgstr "更新日志"
 msgid "Preference Mirror Speedup"
 msgstr "镜像加速"
 
+msgid "Mirror Station"
+msgstr "镜像站"
+
+msgid "Automatic selection (Recommend)"
+msgstr "自动选择 (推荐)"
+
+msgid "Ghproxy (Maybe faster)"
+msgstr "Ghproxy (也许更快)"
+
+msgid "FastGit"
+msgstr "FastGit"
+
 msgid "Preference Mirror for speeding up downloads while upgrading (For Mainland)"
 msgstr "定时更新固件时优先启用镜像加速 (适用与被墙地区)"
 
