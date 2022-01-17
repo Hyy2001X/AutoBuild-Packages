@@ -20,7 +20,7 @@ proxy.default = 1
 proxy:depends("enable", "1")
 proxy.optional = false
 
-proxy_type = s:option(ListValue, "mirror", translate("Mirror Station"))
+proxy_type = s:option(ListValue, "proxy_type", translate("Mirror Station"))
 proxy_type.default = "A"
 proxy_type:value("A", translate("Automatic selection (Recommend)"))
 proxy_type:value("G", translate("Ghproxy (Maybe faster)"))
@@ -28,12 +28,19 @@ proxy_type:value("F", translate("FastGit"))
 proxy_type:depends("proxy", "1")
 proxy_type.optional = false
 
-forceflash = s:option(Flag, "forceflash", translate("Preference Force Flashing"), translate("Preference Force Flashing while firmware upgrading (DANGEROUS)"))
-forceflash.default = 0
-forceflash:depends("enable", "1")
-forceflash.optional = false
+advanced = s:option(Flag, "advanced", translate("Advanced Settings"))
+advanced.default = 0
+advanced:depends("enable", "1")
 
-week = s:option(ListValue, "week", translate("Update Day"), translate("Recommend to set AUTOUPDATE time at an idle time"))
+advanced_settings = s:option(MultiValue, "advanced_settings", translate("Advanced Settings"), translate("Supported Multi Selection"))
+advanced_settings:value("--skip-verify", translate("Skip SHA256 Verify"))
+advanced_settings:value("-F", translate("Force Flash Firmware"))
+advanced_settings:value("--decompress", translate("Decompress [img.gz] Firmware"))
+advanced_settings:value("-n", translate("Upgrade without keeping config"))
+advanced_settings:depends("advanced", "1")
+advanced.description = translate("Please don't select it unless you know what you're doing")
+
+week = s:option(ListValue, "week", translate("Update Day"), translate("Recommend to set the AUTOUPDATE time to an uncommon time"))
 week:value(7, translate("Everyday"))
 week:value(1, translate("Monday"))
 week:value(2, translate("Tuesday"))

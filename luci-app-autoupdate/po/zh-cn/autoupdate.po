@@ -34,13 +34,25 @@ msgstr "FastGit"
 msgid "Preference Mirror for speeding up downloads while upgrading (For Mainland)"
 msgstr "定时更新固件时优先启用镜像加速 (适用与被墙地区)"
 
-msgid "Preference Force Flashing"
-msgstr "强制刷写"
+msgid "Advanced Settings"
+msgstr "高级设置"
 
-msgid "Preference Force Flashing while firmware upgrading (DANGEROUS)"
-msgstr "定时更新固件时优先使用 -F 参数强制刷写固件 (危险)"
+msgid "Supported Multi Selection"
+msgstr "支持同时勾选多个选项"
 
-msgid "Recommend to set AUTOUPDATE time at an idle time"
+msgid "Skip SHA256 Verify"
+msgstr "跳过固件 SHA256 校验"
+
+msgid "Force Flash Firmware"
+msgstr "强制刷写固件"
+
+msgid "Decompress [img.gz] Firmware"
+msgstr "解压 [img.gz] 格式固件"
+
+msgid "Please don't select it unless you know what you're doing!"
+msgstr "请勿随意勾选除非你知道自己在做什么!"
+
+msgid "Recommend to set the AUTOUPDATE time to an uncommon time"
 msgstr "建议设置定时更新时间为设备不常用的时间"
 
 msgid "Update Day"
