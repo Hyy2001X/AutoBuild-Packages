@@ -57,7 +57,7 @@ start_service() {
 				unset perm_bin
 			fi
 		done 
-		[ -n "$(pgrep webd)" ] && pgrep webd | xargs kill -9
+		ps | grep "$webd_bin -c $webd_conf" | awk '{print $1}' | xargs kill -9 2> /dev/null
 		${LOGGER} "Starting Webd Netdisk Service ..."
 		procd_open_instance
 		procd_set_param command $webd_bin -c $webd_conf
@@ -71,7 +71,6 @@ start_service() {
 
 stop_service() {
 	${LOGGER} "Stopping Webd Netdisk Service ..."
-	pgrep webd | xargs kill -9
 }
 
 service_triggers() {
