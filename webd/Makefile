@@ -3,7 +3,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=webd
-PKG_VERSION:=20220105
+PKG_VERSION:=20220110
 
 STRIP:=true
 
