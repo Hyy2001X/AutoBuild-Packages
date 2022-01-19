@@ -1,11 +1,11 @@
 # Copyright (C) 2020-2021 Hyy2001X <https://github.com/Hyy2001X>
+# See more information at https://webd.cf/
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=webd
 PKG_VERSION:=20220110
-
-STRIP:=true
+PKG_RELEASE:=$(AUTORELESE)
 
 include $(INCLUDE_DIR)/package.mk
 
@@ -70,9 +70,9 @@ ifeq ($(ARCH),x86_64)
 	TARGET_ARCH:=x86-64
 endif
 
-PKG_SOURCE_URL:=https://gwgw.ga/webd/$(PKG_VERSION)/webd-$(PKG_VERSION)-openwrt-$(TARGET_ARCH).tar.gz?
-PKG_SOURCE:=$(PKG_NAME)-$(TARGET_ARCH)-$(PKG_VERSION).tar.gz
-PKG_MD5SUM:=skip
+PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION)-openwrt-$(TARGET_ARCH).tar.gz
+PKG_SOURCE_URL:=https://gwgw.ga/webd/$(PKG_VERSION)/
+PKG_HASH:=skip
 
 UNTAR_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
