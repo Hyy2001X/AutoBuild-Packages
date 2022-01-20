@@ -23,8 +23,8 @@ proxy.optional = false
 proxy_type = s:option(ListValue, "proxy_type", translate("Mirror Station"))
 proxy_type.default = "A"
 proxy_type:value("A", translate("Automatic selection (Recommend)"))
-proxy_type:value("G", translate("Ghproxy (Maybe faster)"))
-proxy_type:value("F", translate("FastGit"))
+proxy_type:value("G", translate("GitHub Proxy - Ghproxy (Maybe faster)"))
+proxy_type:value("F", translate("FastGit UK"))
 proxy_type:depends("proxy", "1")
 proxy_type.optional = false
 
@@ -38,7 +38,7 @@ advanced_settings:value("-F", translate("Force Flash Firmware"))
 advanced_settings:value("--decompress", translate("Decompress [img.gz] Firmware"))
 advanced_settings:value("-n", translate("Upgrade without keeping config"))
 advanced_settings:depends("advanced", "1")
-advanced.description = translate("Please don't select it unless you know what you're doing")
+advanced.description = translate("Please don't select it unless you know what you're doing!")
 
 week = s:option(ListValue, "week", translate("Update Day"), translate("Recommend to set the AUTOUPDATE time to an uncommon time"))
 week:value(7, translate("Everyday"))

@@ -25,11 +25,11 @@ msgstr "镜像站"
 msgid "Automatic selection (Recommend)"
 msgstr "自动选择 (推荐)"
 
-msgid "Ghproxy (Maybe faster)"
-msgstr "Ghproxy (也许更快)"
+msgid "GitHub Proxy - Ghproxy (Maybe faster)"
+msgstr "GitHub Proxy - Ghproxy (也许更快)"
 
-msgid "FastGit"
-msgstr "FastGit"
+msgid "FastGit UK"
+msgstr "FastGit UK"
 
 msgid "Preference Mirror for speeding up downloads while upgrading (For Mainland)"
 msgstr "定时更新固件时优先启用镜像加速 (适用与被墙地区)"
@@ -50,7 +50,7 @@ msgid "Decompress [img.gz] Firmware"
 msgstr "解压 [img.gz] 格式固件"
 
 msgid "Upgrade without keeping config"
-msgstr "不保留配置更新"
+msgstr "不保留配置"
 
 msgid "Please don't select it unless you know what you're doing!"
 msgstr "请勿随意勾选除非你知道自己在做什么!"
