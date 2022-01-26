@@ -27,11 +27,9 @@ root.rmempty = false
 
 enable_recyclebin = s:option(Flag, "enable_recyclebin", translate("Recycle Bin"), translatef("Automatically create recycle bin directory"))
 enable_recyclebin.default = 1
-enable_recyclebin:depends("enable", "1")
 
 enable_anonymous = s:option(Flag, "enable_anonymous", translate("Enable Anonymous Access"), translatef("Anonymous access is allowed when enabled (Not Safe)"))
 enable_anonymous.default = 0
-enable_anonymous:depends("enable", "1")
 
 anonymous_perm = s:option(MultiValue, "anonymous_perm", translate("Anonymous Permission"))
 anonymous_perm:value("r", translate("Read files"))
@@ -39,6 +37,7 @@ anonymous_perm:value("l", translate("Obtain file list"))
 anonymous_perm:value("u", translate("Upload files"))
 anonymous_perm:value("m", translate("Remove files"))
 anonymous_perm:value("S", translate("Show hidden files"))
+anonymous_perm:value("T", translate("Play media"))
 anonymous_perm:depends("enable_anonymous", "1")
 anonymous_perm.description = translate("At least one permission must be choosed to allow anonymous access")
 
@@ -76,5 +75,8 @@ enable_move.default = 1
 
 enable_showhide = s:option(Flag, "enable_showhide", translate("Show hidden files"))
 enable_showhide.default = 0
+
+enable_play = s:option(Flag, "enable_play", translate("Play media"))
+enable_play.default = 1
 
 return m

@@ -16,19 +16,28 @@ start_service() {
 		[ ! -x "$webd_bin" ] && EXIT "Unable to access $webd_bin,exit ..."
 		if [ "$enable_recyclebin" == 1 -a ! -d "$webd_root/.Trash" ]
 		then
-			${LOGGER} "Creating Recycle-Bin directory ..."
+			${LOGGER} "Creating Recycle Bin directory ..."
 			mkdir -p $webd_root/.Trash || EXIT "Failed to create Recycle Bin directory,exit ..."
 		fi
-		${LOGGER} "Removing old config ..."
-		rm $webd_conf
+		${LOGGER} "Removing old config file ..."
+		rm -f $webd_conf
 		touch -a $webd_conf || EXIT "Failed to create config,exit ..."
 		[ "$enable_ipv6" == 1 ] && webd_port="[::]:${webd_port}"
 		if [ "$enable_anonymous" != 0 ]
 		then
-			unset enable_anonymous
-			for i in $(echo $anonymous_perm);do
-				enable_anonymous="$enable_anonymous$i"
-			done
+			if [ -n "$anonymous_perm" ]
+			then
+				
+				unset enable_anonymous
+				for i in $(echo $anonymous_perm);do
+					enable_anonymous="$enable_anonymous$i"
+				done
+				unset i
+			else
+				enable_anonymous=0
+				uci set webd.@webd[0].enable_anonymous=0
+				uci commit webd
+			fi
 		fi
 		echo "Webd.Listen $webd_port" >> $webd_conf
 		echo "Webd.Root $webd_root" >> $webd_conf
@@ -36,12 +45,13 @@ start_service() {
 		
 		for u in 0 1;do
 			for i in $(echo $users_list);do
-				local eval ${i}=$(uci_get_by_type users $u $i 0)
+				eval ${i}=$(uci_get_by_type users $u $i 0)
 				echo "$users_list" | grep -q $i
 				[ "$?" == 0 ] && eval perm_bin=$(eval echo '$'perm_bin)$(uci_get_by_type users $u $i)
 			done
-			local username=$(uci_get_by_type users $u username)
-			local password=$(uci_get_by_type users $u password)
+			unset i
+			username=$(uci_get_by_type users $u username)
+			password=$(uci_get_by_type users $u password)
 			if [ -n "$username" ]
 			then
 				eval perm=$(perm_converter $(eval echo '$'perm_bin) | tail -n 1)
@@ -50,14 +60,16 @@ start_service() {
 					${LOGGER} "Creating account for User $username ..."
 					echo "Webd.User $(eval echo '$'perm) $username $password" >> $webd_conf
 				else
-					${LOGGER} "Removing wrong config ..."
+					${LOGGER} "Removing excessive user config ..."
 					uci delete webd.@users[$u]
-					uci commit
+					uci commit webd
 				fi
 				unset perm_bin
 			fi
-		done 
-		ps | grep "$webd_bin -c $webd_conf" | awk '{print $1}' | xargs kill -9 2> /dev/null
+		done
+		unset u
+		${LOGGER} "Killing old processes ..."
+		ps -efww | grep "$webd_bin" | awk '{print $1}' | xargs kill -9 2> /dev/null
 		${LOGGER} "Starting Webd Netdisk Service ..."
 		procd_open_instance
 		procd_set_param command $webd_bin -c $webd_conf
