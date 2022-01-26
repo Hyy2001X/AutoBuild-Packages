@@ -21,7 +21,7 @@ port.rmempty = false
 enable_ipv6 = s:option(Flag, "enable_ipv6", translate("Listen IPv6"), translatef("Listen both IPv4 and IPv6 Address"))
 enable_ipv6.default = 0
 
-root = s:option(Value, "webd_root", translate("Listening Directory"), translatef("Directory of Webd Netdisk"))
+root = s:option(Value, "webd_root", translate("Local Directory"), translatef("Directory of Webd Netdisk"))
 root.default = "/mnt"
 root.rmempty = false
 
