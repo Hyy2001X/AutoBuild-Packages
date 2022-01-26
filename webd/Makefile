@@ -86,6 +86,8 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/bin
 	$(INSTALL_BIN) $(UNTAR_DIR)/webd/webd $(1)/usr/bin
+	$(INSTALL_DIR) $(1)/usr/share/$(PKG_NAME)
+	$(INSTALL_BIN) $(UNTAR_DIR)/webd/web/.player.htm $(1)/usr/share/$(PKG_NAME)
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
