@@ -21,48 +21,52 @@ define Package/$(PKG_NAME)/description
 	webd - A Lightweight self-hosted netdisk application
 endef
 
-ifeq ($(ARCH)-$(BOARD),arm-kirkwood)
-	TARGET_ARCH:=arm_xscale.kirkwood
+ifeq ($(ARCH),aarch64)
+	ifeq ($(BOARD),cortex-a53)
+		TARGET_ARCH:=aarch64_cortex-a53.brcm2708-bcm2710
+	endif
+	ifeq ($(BOARD),rockchip)
+		TARGET_ARCH:=aarch64_generic.rockchip-armv8
+	endif
+	ifeq ($(BOARD),mvebu)
+		TARGET_ARCH:=arm_cortex-a9.mvebu-cortexa9
+	endif	
 endif
 
-ifeq ($(ARCH)-$(BOARD),arm-oxnas)
-	TARGET_ARCH:=arm_mpcore.oxnas
-endif
-
-ifeq ($(ARCH)-$(CPU_TYPE),mvebu-cortexa9)
-	TARGET_ARCH:=arm_cortex-a9.mvebu-cortexa9
-endif
-
-ifeq ($(ARCH)-$(BOARD),arm-bcm53xx)
-	TARGET_ARCH:=arm_cortex-a9.bcm53xx
-endif
-
-ifeq ($(ARCH)-$(BOARD),arm-ipq40xx)
-	TARGET_ARCH:=arm_cortex-a7.ipq40xx
-endif
-
-ifeq ($(ARCH)-$(BOARD),arm-ipq806x)
-	TARGET_ARCH:=arm_cortex-a15.ipq806x
-endif
-
-ifeq ($(ARCH),rockchip)
-	TARGET_ARCH:=aarch64_generic.rockchip-armv8
-endif
-
-ifeq ($(ARCH)-$(BOARD),arm-bcm27xx)
-	TARGET_ARCH:=aarch64_cortex-a53.brcm2708-bcm2710
-endif
-
-ifeq ($(ARCH)-$(BOARD),mipsel-bcm47xx)
-	TARGET_ARCH:=mipsel_74kc.brcm47xx-mips74k
+ifeq ($(ARCH),arm)
+	ifeq ($(BOARD),ipq806x)
+		TARGET_ARCH:=arm_cortex-a15.ipq806x
+	endif
+	ifeq ($(BOARD),ipq40xx)
+		TARGET_ARCH:=arm_cortex-a7.ipq40xx
+	endif
+	ifeq ($(BOARD),bcm53xx)
+		TARGET_ARCH:=arm_cortex-a9.bcm53xx
+	endif
+	ifeq ($(BOARD),oxnas)
+		TARGET_ARCH:=arm_mpcore.oxnas
+	endif
+	ifeq ($(BOARD),kirkwood)
+		TARGET_ARCH:=arm_xscale.kirkwood
+	endif
 endif
 
 ifeq ($(ARCH),mipsel)
-	TARGET_ARCH:=mipsel_24kc.ramips-mt7620
+	ifeq ($(BOARD),bcm47xx)
+		TARGET_ARCH:=mipsel_74kc.brcm47xx-mips74k
+	endif
+	ifeq ($(BOARD),ramips)
+		TARGET_ARCH:=mipsel_24kc.ramips-mt7620
+	endif
 endif
 
 ifeq ($(ARCH),mips)
-	TARGET_ARCH:=mips_24kc.ath79
+	ifeq ($(BOARD),ath79)
+		TARGET_ARCH:=mips_24kc.ath79
+	endif
+	ifeq ($(BOARD),bcm63xx)
+		TARGET_ARCH:=mips_mips32.brcm63xx-uClibc
+	endif
 endif
 
 ifeq ($(ARCH),x86_64)
