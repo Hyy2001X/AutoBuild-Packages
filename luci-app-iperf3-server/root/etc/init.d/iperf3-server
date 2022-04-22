@@ -27,11 +27,11 @@ start_service() {
 			then
 				sleep $delay
 				$LOGGER "Starting iPerf3 Server [$u] with Port [$port] ..."
-				$(command -v iperf3) -s -D -p $port $extra_options
-				# procd_open_instance
-				# procd_set_param command $(command -v iperf3) -s -D -p $port $extra_options
-				# procd_set_param respawn 3000 3 10
-				# procd_close_instance
+				# $(command -v iperf3) -s -D -p $port $extra_options
+				procd_open_instance
+				procd_set_param command sleep $delay ; $(command -v iperf3) -s -D -p $port $extra_options
+				procd_set_param respawn 3000 3 10
+				procd_close_instance
 			fi
 			unset enable_server delay
 		} &
