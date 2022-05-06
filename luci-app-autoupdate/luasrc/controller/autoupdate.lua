@@ -13,5 +13,5 @@ function index()
 end
 
 function print_log()
-	luci.http.write(luci.sys.exec("tail -n 100 /tmp/AutoUpdate.log 2> /dev/null"))
+	luci.http.write(luci.sys.exec("tail -n 100 `autoupdate --env Log_File` 2> /dev/null"))
 end

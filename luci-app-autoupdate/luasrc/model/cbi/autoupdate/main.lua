@@ -8,8 +8,8 @@ translate("AutoUpdate LUCI supports scheduled upgrade & one-click firmware upgra
 s = m:section(TypedSection, "autoupdate")
 s.anonymous = true
 
-local default_url = luci.sys.exec("bash /bin/AutoUpdate.sh --var Github")
-local default_flag = luci.sys.exec("bash /bin/AutoUpdate.sh --var TARGET_FLAG")
+local default_url = luci.sys.exec("autoupdate --env Github")
+local default_flag = luci.sys.exec("autoupdate --env TARGET_FLAG")
 
 enable = s:option(Flag, "enable", translate("Enable"), translate("Automatically update firmware during the specified time when Enabled"))
 enable.default = 0

@@ -1,12 +1,18 @@
-# Copyright (C) 2020-2021 Hyy2001X <https://github.com/Hyy2001X>
+# Copyright (C) 2020-2022 Hyy2001X <https://github.com/Hyy2001X>
 
 include $(TOPDIR)/rules.mk
 
-LUCI_TITLE:=LuCI Support for AutoUpdate Script
+PKG_NAME:=luci-app-autoupdate
+PKG_VERSION:=2.5
+PKG_RELEASE:=1
+
+LUCI_TITLE:=LuCI Support for autoupdate Script
 LUCI_DEPENDS:=+bash +jq
 LUCI_PKGARCH:=all
-PKG_VERSION:=2.4
-PKG_RELEASE:=2
+
+define Package/$(PKG_NAME)/conffiles
+/etc/autoupdate
+endef
 
 include $(TOPDIR)/feeds/luci/luci.mk
 
