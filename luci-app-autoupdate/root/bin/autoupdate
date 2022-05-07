@@ -1331,11 +1331,11 @@ KILL_PROCESS() {
 	done
 }
 
-KILL_PROCESS autoupdate
-
 Script_Path="$(cd $(dirname $0) 2> /dev/null ; pwd 2> /dev/null)"
 Script_File="$0"
 Script_Url="https://raw.githubusercontent.com/Hyy2001X/AutoBuild-Packages/master/luci-app-autoupdate/root/bin/autoupdate"
+
+KILL_PROCESS $0
 
 Tmp_Path=/tmp/autoupdate
 Config_Path=/etc/autoupdate
