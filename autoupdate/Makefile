@@ -3,7 +3,7 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=autoupdate
-PKG_VERSION:=6.8.9
+PKG_VERSION:=1
 PKG_RELEASE:=1
 
 include $(INCLUDE_DIR)/package.mk
