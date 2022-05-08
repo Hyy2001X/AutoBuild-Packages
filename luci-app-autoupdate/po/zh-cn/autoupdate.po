@@ -70,6 +70,9 @@ msgstr "用于检测固件版本更新以及下载固件的地址"
 msgid "Firmware Flag"
 msgstr "固件标签"
 
+msgid "Log Path"
+msgstr "日志路径"
+
 msgid "Do Upgrade"
 msgstr "执行更新"
 

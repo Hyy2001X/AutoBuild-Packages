@@ -10,6 +10,7 @@ s.anonymous = true
 
 local default_url = luci.sys.exec("autoupdate --env Github")
 local default_flag = luci.sys.exec("autoupdate --env TARGET_FLAG")
+local default_logpath = luci.sys.exec("autoupdate --env Log_Path")
 
 enable = s:option(Flag, "enable", translate("Enable"), translate("Automatically update firmware during the specified time when Enabled"))
 enable.default = 0
@@ -71,5 +72,9 @@ github.rmempty = false
 flag = s:option(Value,"flag", translate("Firmware Flag"))
 flag.default = default_flag
 flag.rmempty = false
+
+logpath = s:option(Value,"logpath", translate("Log Path"))
+logpath.default = default_logpath
+logpath.rmempty = false
 
 return m

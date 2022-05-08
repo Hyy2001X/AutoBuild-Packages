@@ -7,7 +7,7 @@ Script_File="$(command -v autoupdate)"
 Script_Cmd="$Script_File -u"
 
 start() {
-	local basic_list="enable proxy proxy_type advanced_settings github flag week minute hour"
+	local basic_list="enable proxy proxy_type advanced_settings github flag logpath week minute hour"
 	for i in $(echo $basic_list);do
 		local eval $i="$(uci_get_by_type autoupdate 0 $i)"
 	done;unset i
@@ -33,8 +33,10 @@ start() {
 	fi
 	${LOGGER} "Setting Github URL to $github ..."
 	${LOGGER} "Setting Flag to $flag ..."
+	${LOGGER} "Setting Log Path to $logpath ..."
 	$Script_File -C $github > /dev/null 2>&1
 	$Script_File --flag $flag > /dev/null 2>&1
+	$Script_File --log -path $logpath > /dev/null 2>&1
 }
 
 stop() {
