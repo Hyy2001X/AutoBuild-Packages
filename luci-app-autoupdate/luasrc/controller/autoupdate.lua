@@ -12,7 +12,7 @@ function index()
 	entry({"admin", "system", "autoupdate", "print_log"}, call("print_log")).leaf = true
 end
 
-local logfile = luci.sys.exec("autoupdate --env Log_File")
+local logfile = luci.sys.exec("autoupdate --env Log_Full")
 function print_log()
 	luci.http.write(luci.sys.exec("tail -n 50 " .. logfile .. " 2> /dev/null"))
 end

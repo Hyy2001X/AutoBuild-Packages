@@ -4,7 +4,7 @@ include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-autoupdate
 PKG_VERSION:=2.8
-PKG_RELEASE:=1
+PKG_RELEASE:=2
 
 LUCI_TITLE:=LuCI Support for autoupdate
 LUCI_DEPENDS:=+autoupdate

@@ -3,7 +3,7 @@
 # AutoUpdate for Openwrt
 # Dependences: wget-ssl/wget/uclient-fetch curl jq expr sysupgrade
 
-Version=V6.9.1
+Version=V6.9.2
 
 function TITLE() {
 	clear && echo "Openwrt-AutoUpdate Script by Hyy2001 ${Version}"
@@ -44,7 +44,7 @@ function SHELL_HELP() {
     --flag <FLAG>		更改固件标签为提供的 <FLAG>
     ${Next} -reset		恢复默认的固件标签
     --fw-log < | *>		打印 <当前 | 指定> 版本的固件更新日志
-    --env <VARIABLE>		打印用户指定的环境变量 <VARIABLE>
+    --env <ENV>			打印用户指定的环境变量 <ENV>
     ${Next} -list			打印环境变量列表
     --log			打印 AutoUpdate 运行日志 ${Green}(问题反馈)${White}
     ${Next} -clean		清空程序运行日志
@@ -97,11 +97,11 @@ function MEMINFO() {
 	Result=$(eval echo '$'$1)
 	if [[ ${Result} ]]
 	then
-		LOGGER "可用 $1 运行内存: ${Result}M"
+		LOGGER "[$1] 可用运行内存: [${Result}M]"
 		echo ${Result}
 		return 0
 	else
-		LOGGER "[$1] 可用 $1 运行内存获取失败!"
+		LOGGER "[$1] 可用内存获取失败!"
 		return 1
 	fi
 }
@@ -113,11 +113,11 @@ function SPACEINFO() {
 	Result="$(df -m /${Path} 2> /dev/null | grep -v Filesystem | awk '{print $4}')"
 	if [[ ${Result} ]]
 	then
-		LOGGER "/${Path} 可用存储空间: ${Result}M"
+		LOGGER "[/${Path}] 可用存储空间: ${Result}M"
 		echo "${Result}"
 		return 0
 	else
-		LOGGER "/${Path} 可用存储空间获取失败!"
+		LOGGER "[/${Path}] 可用存储空间获取失败!"
 		return 1
 	fi
 }
@@ -161,12 +161,23 @@ function LIST_ENV() {
 		return 0
 	;;
 	*)
-		[[ $# != 1 ]] && return 1
-		ENV=$1
-		ENV_Result="$(GET_VARIABLE $ENV ${Config_Custom})"
-		[[ ! ${ENV_Result} ]] && ENV_Result="$(GET_VARIABLE $ENV ${Config_Default})"
-		[[ ! ${ENV_Result} ]] && ENV_Result="$(eval echo \$$(eval echo '$'ENV))"
-		[[ ${ENV_Result} ]] && echo "${ENV_Result}"
+		while [[ $1 ]];do
+			ENV="$1"
+			if [[ ! ${ENV} =~ (-) && ! ${ENV} == [0-9] && ${ENV} =~ [0-9a-zA-Z] ]]
+			then
+				if [[ $(eval echo \$\{#$ENV[@]\}) -gt 1 ]]
+				then
+					eval echo \$\{$ENV[@]\}
+				else
+					# ENV_Result="$(GET_VARIABLE $ENV ${Config_Custom})"
+					# [[ ! ${ENV_Result} ]] && ENV_Result="$(GET_VARIABLE $ENV ${Config_Default})"
+					[[ ! ${ENV_Result} ]] && ENV_Result="$(eval echo \$$(eval echo '$'{ENV}))"
+					echo "${ENV_Result}"
+					unset ENV_Result
+				fi
+			fi
+			shift
+		done
 		return 0
 	;;
 	esac
@@ -176,9 +187,9 @@ function CHECK_ENV() {
 	while [[ $1 ]];do
 		if [[ $(GET_VARIABLE $1 ${Config_Default} 2> /dev/null) ]]
 		then
-			ECHO y "检查环境变量 [$1] ... 正常"
+			ECHO y "检查环境变量: [$1] ... 正常"
 		else
-			ECHO r "检查环境变量 [$1] ... 错误"
+			ECHO r "检查环境变量: [$1] ... 错误"
 		fi
 		shift
 	done
@@ -199,9 +210,10 @@ function CHECK_PKG() {
 
 function ECHO() {
 	local Color
-	[[ ! $1 ]] && {
+	if [[ ! $1 ]]
+	then
 		echo -ne "\n${Grey}[$(date "+%H:%M:%S")]${White} "
-	} || {
+	else
 		while [[ $1 ]];do
 			case "$1" in
 			r | g | b | y | x)
@@ -222,7 +234,7 @@ function ECHO() {
 		done
 		echo -e "\n${Grey}[$(date "+%H:%M:%S")]${White}${Color} ${Message}${White}"
 		LOGGER "${Message}"
-	}
+	fi
 }
 
 function LOGGER() {
@@ -353,6 +365,7 @@ function LOAD_VARIABLE() {
 		fi
 	;;
 	esac
+	Log_Full="${Log_Path}/${Log_File}"
 }
 
 function ALTER_GITHUB() {
@@ -1013,51 +1026,47 @@ function REMOVE_CACHE() {
 }
 
 function LOG() {
-	if [[ ! $1 ]]
-	then
+	case "$1" in
+	-path)
+		[[ ! $2 ]] && SHELL_HELP
+		if [[ $2 == ${Log_Path} ]]
+		then
+			ECHO y "AutoUpdate 日志保存路径相同,无需修改!"
+			return 0
+		fi
+		if [[ ! -d $2 ]]
+		then
+			mkdir -p $2 2> /dev/null || {
+				ECHO r "AutoUpdate 日志保存路径错误!"
+				return 1
+			}
+		fi
+		EDIT_VARIABLE rm ${Config_Custom} Log_Path
+		EDIT_VARIABLE edit ${Config_Custom} Log_Path $2
+		Log_Path=${Log_Path}
+		uci set autoupdate.@autoupdate[0].logpath="$2" 2> /dev/null
+		uci commit autoupdate
+		ECHO y "AutoUpdate 日志保存路径已修改为: [$2]!"
+		return 0
+	;;
+	-del | -rm | -clean)
+		RM ${Log_Path}/${Log_File}
+		return 0
+	;;
+	*)
 		if [[ -s ${Log_Path}/${Log_File} ]]
 		then
 			TITLE && echo
 			cat ${Log_Path}/${Log_File} 2> /dev/null
 			return 0
+		else
+			return 1
 		fi
-	else
-		while [[ $1 ]];do
-			case "$1" in
-			-path)
-				if [[ $2 == ${Log_Path} ]]
-				then
-					ECHO y "AutoUpdate 日志保存路径相同,无需修改!"
-					return 0
-				fi
-				if [[ ! -d 2 ]]
-				then
-					mkdir -p $2 2> /dev/null || {
-						ECHO r "AutoUpdate 日志保存路径错误!"
-						return 1
-					}
-				fi
-				EDIT_VARIABLE rm ${Config_Custom} Log_Path
-				EDIT_VARIABLE edit ${Config_Custom} Log_Path $2
-				Log_Path=${Log_Path}
-				uci set autoupdate.@autoupdate[0].logpath="$2" 2> /dev/null
-				uci commit autoupdate
-				ECHO y "AutoUpdate 日志保存路径已修改为: [$2]!"
-				return 0
-			;;
-			-del | -rm | -clean)
-				RM ${Log_Path}/${Log_File}
-				return 0
-			;;
-			*)
-				SHELL_HELP
-			;;
-			esac
-		done
-	fi
+	;;
+	esac
 }
 
-URL_X() {
+function URL_X() {
 	local URL=$1 Type URL_Final
 
 	[[ ${URL} =~ raw.githubusercontent.com ]] && Type=raw
@@ -1332,9 +1341,10 @@ function AutoUpdate_Main() {
 	done
 }
 
-KILL_PROCESS() {
+function KILL_PROCESS() {
 	local i;for i in $(ps -efww | grep -v grep | grep $1 | grep -v $$ | awk '{print $1}');do
 		kill -9 ${i} 2> /dev/null &
+		LOGGER "Killed ${i}"
 	done
 }
 
