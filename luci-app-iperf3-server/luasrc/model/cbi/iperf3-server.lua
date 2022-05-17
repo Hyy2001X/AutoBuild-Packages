@@ -2,7 +2,7 @@ m = Map("iperf3-server", translate("iPerf3 Server"), translate("iPerf3 - The ult
 
 m:section(SimpleSection).template = "iperf3-server/iperf3-server_status"
 
-s = m:section(TypedSection,"iperf3-server","")
+s = m:section(TypedSection, "iperf3-server", "")
 s.addremove = false
 s.anonymous = true
 

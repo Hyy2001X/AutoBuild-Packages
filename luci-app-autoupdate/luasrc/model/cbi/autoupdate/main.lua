@@ -65,15 +65,15 @@ minute.rmempty = true
 minute.default = 30
 minute:depends("enable", "1")
 
-github = s:option(Value,"github", translate("Github Url"), translate("For detecting cloud version and downloading firmware"))
+github = s:option(Value, "github", translate("Github Url"), translate("For detecting cloud version and downloading firmware"))
 github.default = default_url
 github.rmempty = false
 
-flag = s:option(Value,"flag", translate("Firmware Flag"))
+flag = s:option(Value, "flag", translate("Firmware Flag"))
 flag.default = default_flag
 flag.rmempty = false
 
-logpath = s:option(Value,"logpath", translate("Log Path"))
+logpath = s:option(Value, "logpath", translate("Log Path"))
 logpath.default = default_logpath
 logpath.rmempty = false
 

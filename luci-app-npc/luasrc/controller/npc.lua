@@ -15,4 +15,3 @@ function act_status()
 	luci.http.prepare_content("application/json")
 	luci.http.write_json(e)
 end
-
