@@ -17,7 +17,7 @@ msgid "Set up Multi-iPerf3 Servers"
 msgstr "设置多个 iPerf3 服务端"
 
 msgid "Start delay"
-msgstr "启动延迟"
+msgstr "启动延迟 (秒)"
 
 msgid "iPerf3 Server listening port"
 msgstr "iPerf3 服务端监听端口"

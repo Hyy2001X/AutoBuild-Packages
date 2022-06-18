@@ -24,7 +24,7 @@ port.datatype = "port"
 port.default = "5201"
 port.rmempty = false
 
-delay = s:option(Value, "delay", translate("Start delay"))
+delay = s:option(Value, "delay", translate("Start delay (Seconds)"))
 delay.default = "0"
 delay.datatype = "uinteger"
 delay.rmempty = false
