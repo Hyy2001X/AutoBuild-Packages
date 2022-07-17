@@ -3,7 +3,7 @@
 # AutoUpdate for Openwrt
 # Dependences: wget-ssl/wget/uclient-fetch curl jq expr sysupgrade
 
-Version=V6.9.2
+Version=V6.9.3
 
 function TITLE() {
 	clear && echo "Openwrt-AutoUpdate Script by Hyy2001 ${Version}"
@@ -67,7 +67,7 @@ function SHOW_VARIABLE() {
 固件版本:		${OP_VERSION} *
 固件标签:		${TARGET_FLAG} *
 内核版本:		$(uname -r)
-运行内存:		Mem: $(MEMINFO Mem)M | Swap: $(MEMINFO Swap)M | Total: $(MEMINFO All)M
+运行内存:		Memory: $(MEMINFO Mem)M | swap: $(MEMINFO Swap)M | Total: $(MEMINFO All)M
 其他参数:		${TARGET_BOARD} / ${TARGET_SUBTARGET}
 固件作者:		${Author} *
 作者仓库:		${Github} *
@@ -113,7 +113,7 @@ function SPACEINFO() {
 	Result="$(df -m /${Path} 2> /dev/null | grep -v Filesystem | awk '{print $4}')"
 	if [[ ${Result} ]]
 	then
-		LOGGER "[/${Path}] 可用存储空间: ${Result}M"
+		LOGGER "[/${Path}] 可用存储空间: [${Result}M]"
 		echo "${Result}"
 		return 0
 	else
@@ -320,7 +320,7 @@ function LOAD_CONFIG() {
 			chmod +x $1
 			source $1
 		else
-			LOGGER "警告: 未检测到环境变量列表: $1"
+			LOGGER "未检测到环境变量列表: [$1]"
 		fi
 		shift
 	done
@@ -330,9 +330,15 @@ function LOAD_VARIABLE() {
 	CHECK_PKG_DEPENDS -f ${PKG_DEPENDS[@]}
 	for i in ${ENV_DEPENDS[@]};do
 		local ENV="$(GET_VARIABLE ${i} $1)"
+		local _ENV="$(GET_VARIABLE ${i} $2)"
+		if [[ ${_ENV} ]]
+		then
+			LOGGER "${i}: Using ${_ENV} instead of ${ENV}"
+			ENV=${_ENV}
+		fi
 		if [[ ! ${ENV} ]]
 		then
-			ECHO r "警告: 未检测到环境变量: [${i}]"
+			ECHO r "未检测到环境变量: [${i}]"
 			sleep 1
 		fi
 		eval ${i}="${ENV}" 2> /dev/null
@@ -371,7 +377,7 @@ function LOAD_VARIABLE() {
 function ALTER_GITHUB() {
 	if [[ ! $1 =~ https://github.com/ || $# != 1 ]]
 	then
-		ECHO r "Github 地址格式错误,正确地址示例: https://github.com/Hyy2001X/AutoBuild-Actions"
+		ECHO r "Github 地址格式错误,正确示例: [https://github.com/Hyy2001X/AutoBuild-Actions]"
 		return 1
 	fi
 	UCI_Github="$(uci get autoupdate.@autoupdate[0].github 2> /dev/null)"
@@ -386,7 +392,7 @@ function ALTER_GITHUB() {
 		EDIT_VARIABLE edit ${Config_Custom} Github $1
 		if [[ $? == 0 ]]
 		then
-			ECHO y "Github 地址已修改为: $1"
+			ECHO y "Github 地址已修改为: [$1]"
 		else
 			ECHO y "Github 地址修改失败!"
 			return 1
@@ -404,24 +410,23 @@ function ALTER_BOOT() {
 	UEFI | BIOS)
 		EDIT_VARIABLE edit ${Config_Custom} x86_Boot_Method $1
 		ECHO r "警告: 修改此设置后更新固件后可能导致设备无法启动!"
-		ECHO y "固件引导格式已修改为: $1"
+		ECHO y "固件引导格式已修改为: [$1]"
 		return 0
 	;;
 	*)
-		ECHO r "错误的参数: [$1],当前支持的选项: [UEFI/BIOS]"
+		ECHO r "错误的参数: [$1], 当前支持的选项: [UEFI/BIOS]"
 		return 1
 	;;
 	esac
 }
 
-function CHANGE_FLAG() {
+function ALTER_FLAG() {
 	case $1 in
 	-reset)
 		EDIT_VARIABLE rm ${Config_Custom} TARGET_FLAG
-		uci set autoupdate.@autoupdate[0].flag="$(GET_VARIABLE TARGET_FLAG ${Config_Default})" 2> /dev/null
+		uci set autoupdate.@autoupdate[0].flag="$(GET_VARIABLE TARGET_FLAG /rom/${Config_Default})" 2> /dev/null
 		uci commit autoupdate
-		ECHO y "固件标签已恢复为默认!"
-		ECHO y "当前固件标签: $(GET_VARIABLE TARGET_FLAG ${Config_Default})"
+		ECHO y "固件标签已恢复为: [$(GET_VARIABLE TARGET_FLAG ${Config_Default})]"
 		return 0
 	;;
 	*)
@@ -432,19 +437,20 @@ function CHANGE_FLAG() {
 			then
 				uci set autoupdate.@autoupdate[0].flag="$1" 2> /dev/null
 				uci commit autoupdate
-				LOGGER "UCI 固件标签已修改为: $1"
+				LOGGER "UCI 固件标签已修改为: [$1]"
 			fi
 			if [[ ! ${TARGET_FLAG} == $1 ]]
 			then
 				EDIT_VARIABLE edit ${Config_Custom} TARGET_FLAG $1
-				ECHO r "警告: 修改此设置后可能导致无法检测到更新!"
-				ECHO y "固件标签已修改为: $1"
+				ECHO r "警告: 修改此设置后可能导致无法检测到最新固件!"
+				ECHO r "后续执行指令: [$0 --flag -reset] 可进行标签恢复!"
+				ECHO y "固件标签已修改为: [$1]"
 			else
 				ECHO g "固件标签未修改!"
 			fi
 			return 0
 		else
-			ECHO r "错误的参数: [$1], 当前仅支持 [a-zA-Z0-9] 且不能包含 <\" = - _ # |> 等特殊字符!"
+			ECHO r "错误的参数: [$1], 当前仅支持 [a-zA-Z0-9] 且不能包含 <\" = - _ # |> 等特殊符号!"
 			return 1
 		fi
 	;;
@@ -501,7 +507,7 @@ function CHECK_PKG_DEPENDS() {
 			CHECK_PKG $1 > /dev/null 2>&1
 			if [[ $? != 0 ]]
 			then
-				ECHO r "未安装软件包: $1"
+				ECHO r "未安装软件包: [$1]"
 				exit 1
 			fi
 			shift
@@ -840,7 +846,7 @@ function DO_UPGRADE() {
 	$*
 	if [[ $? != 0 ]]
 	then
-		ECHO r "固件更新失败,请尝试使用 [autoupdate -F] 指令更新固件!"
+		ECHO r "固件更新失败,请尝试使用 [autoupdate -F] 指令更新固件,执行此命令前请备份固件配置!"
 		exit 1
 	else
 		ECHO y "固件更新成功,即将重启设备 ..."
@@ -1135,7 +1141,7 @@ function AutoUpdate_Main() {
 	LOAD_CONFIG ${Config_Custom}
 	if [[ ! $1 =~ (-H|--help|--chk|--log) ]]
 	then
-		LOAD_VARIABLE ${Config_Default}
+		LOAD_VARIABLE ${Config_Default} ${Config_Custom}
 	fi
 	[[ ! -d ${Tmp_Path} ]] && mkdir -p ${Tmp_Path}
 	[[ ! $* ]] && UPGRADE $*
@@ -1248,7 +1254,7 @@ function AutoUpdate_Main() {
 		--flag)
 			shift
 			[[ -z $* || $# != 1 ]] && SHELL_HELP
-			CHANGE_FLAG $1
+			ALTER_FLAG $1
 			exit
 		;;
 		-V)
