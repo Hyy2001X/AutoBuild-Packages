@@ -3,7 +3,7 @@
 # AutoUpdate for Openwrt
 # Dependences: wget-ssl/wget/uclient-fetch curl jq expr sysupgrade
 
-Version=V6.9.3
+Version=V6.9.4
 
 function TITLE() {
 	clear && echo "Openwrt-AutoUpdate Script by Hyy2001 ${Version}"
@@ -333,7 +333,6 @@ function LOAD_VARIABLE() {
 		local _ENV="$(GET_VARIABLE ${i} $2)"
 		if [[ ${_ENV} ]]
 		then
-			LOGGER "${i}: Using ${_ENV} instead of ${ENV}"
 			ENV=${_ENV}
 		fi
 		if [[ ! ${ENV} ]]
