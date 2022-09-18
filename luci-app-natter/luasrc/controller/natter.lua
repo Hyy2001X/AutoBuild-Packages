@@ -6,7 +6,7 @@ function index()
 	end
 	entry({"admin", "network", "natter"}, alias("admin", "network", "natter", "base"), _("Natter"), 99).dependent = true
 	entry({"admin", "network", "natter", "base"}, cbi("natter/base"), _("Base Settings"), 10).leaf = true
-	entry({"admin", "network", "natter", "log"}, form("natter/log"), _("Log"), 30).leaf = true
+	entry({"admin", "network", "natter", "log"}, form("natter/log"), _("Log"), 20).leaf = true
 	entry({"admin", "network", "natter", "print_log"}, call("print_log")).leaf = true
 end
 
