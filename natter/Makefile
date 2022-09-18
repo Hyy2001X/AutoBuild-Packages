@@ -19,7 +19,7 @@ define Package/$(PKG_NAME)
 	CATEGORY:=Network
 	TITLE:=Open TCP Port under FullCone NAT (NAT 1)
 	URL:=https://github.com/MikeWang000000/Natter
-	DEPENDS:=+python3 +iptables-mod-fullconenat
+	DEPENDS:=+python3-light +iptables-mod-fullconenat
 endef
 
 define Build/Prepare
