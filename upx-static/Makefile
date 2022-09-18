@@ -1,4 +1,4 @@
-# Copyright (C) 2020 Hyy2001X <https://github.com/Hyy2001X>
+# Copyright (C) 2020-2022 Hyy2001X <https://github.com/Hyy2001X>
 
 include $(TOPDIR)/rules.mk
 
