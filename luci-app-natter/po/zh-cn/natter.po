@@ -1,11 +1,14 @@
 msgid "Natter"
 msgstr "Natter"
 
-msgid "Open TCP Port under FullCone NAT (NAT 1)"
-msgstr "帮助 Full cone NAT (NAT 1) 用户打开公网 TCP 端口"
+msgid "Open Port under FullCone NAT (NAT 1)"
+msgstr "帮助 Full cone NAT (NAT 1) 用户打开公网端口"
 
-msgid "Log File"
-msgstr "日志文件"
+msgid "Log Path"
+msgstr "日志路径"
+
+msgid "Log Level"
+msgstr "日志等级"
 
 msgid "Base Settings"
 msgstr "基础设置"
@@ -16,21 +19,63 @@ msgstr "日志"
 msgid "IP Address"
 msgstr "IP 地址"
 
-msgid "Extra Options"
-msgstr "额外参数"
-
 msgid "Start delay (Seconds)"
 msgstr "启动延迟 (秒)"
 
-msgid "Auto Retry"
-msgstr "自动重试"
+msgid "Start delay"
+msgstr "启动延迟"
 
-msgid "Reload Service"
-msgstr "重启服务"
+msgid "Port Settings"
+msgstr "端口设置"
 
-msgid "Exec"
-msgstr "执行"
+msgid "TCP STUN Server"
+msgstr "TCP STUN 服务器"
 
-msgid "Clear Log"
-msgstr "清理日志"
+msgid "UDP STUN Server"
+msgstr "UDP STUN 服务器"
+
+msgid "Keep Alive Server"
+msgstr "Keep Alive 服务器"
+
+msgid "Directory to save natter logs"
+msgstr "Natter 运行日志保存路径 (文件夹)"
+
+msgid "Remarks"
+msgstr "备注"
+
+msgid "Internal Port"
+msgstr "内部端口"
+
+msgid "External Port"
+msgstr "外部端口"
+
+msgid "Enable Port Forward"
+msgstr "启用端口转发"
+
+msgid "Port Type"
+msgstr "端口类型"
+
+msgid "Enable FullCone NAT (NAT 1)"
+msgstr "启用 FullCone NAT (NAT 1)"
+
+msgid "Please DO NOT handle the IP address/domain name/port of the TCP/UDP STUN server (3478) while running proxy"
+msgstr "请不要使用任何代理软件代理 TCP/UDP STUN 服务器的IP 地址/域名/端口 (3478)"
+
+msgid "Local IP Address"
+msgstr "本地 IP 地址"
+
+msgid "Internal IP Address"
+msgstr "内部 IP 地址"
+
+msgid "Forward Mode"
+msgstr "转发模式"
+
+msgid "Firewall"
+msgstr "防火墙"
+
+msgid "Delete Logs"
+msgstr "清除日志"
+
+msgid "<%:Delete Logs%>"
+msgstr "清除日志"
 

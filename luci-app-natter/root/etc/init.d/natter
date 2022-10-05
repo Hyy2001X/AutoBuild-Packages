@@ -4,41 +4,188 @@ START=98
 USE_PROCD=0
 
 start_service() {
-	local basic_list="enable logfile"
-	local port_list="port address delay extra_options enable_port enable_retry"
+	local basic_list="enable enable_fullcone_nat log_path tcp_stun_server udp_stun_server keep_alive_url local_ip"
+	local port_list="enable_port remarks port enable_forward \
+		forward_mode external_port port_type delay log_level \
+		internal_ip internal_port hook"
 	for i in $basic_list
 	do
-		local eval $i="$(uci_get_by_type natter 0 $i)"
+		local eval $i="$(uci_get_by_type base 0 $i)"
 	done ; unset i
+	if [ "$enable_fullcone_nat" == 1 ]
+	then
+		if [ "$(uci get firewall.@defaults[0].fullcone > /dev/null ; echo $?)" == 0 ]
+		then
+			if [ "$(uci get firewall.@defaults[0].fullcone)" == 0 ]
+			then
+				echo "Starting FullCone NAT ..."
+				uci set firewall.@defaults[0].fullcone="1"
+				uci commit firewall
+			else
+				echo "FullCone NAT was already started ..."
+			fi
+		else
+			echo "Failed to start FullCone NAT ..."
+			uci set natter.@base[0].enable_fullcone_nat="0"
+			uci commit natter
+		fi
+	fi
 	if [ "$enable" == 1 ]
 	then
-		[ ! -f "$logfile" ] && touch $logfile
+		include_file=/var/etc/natter.include
+		echo "
+#!/bin/sh
+iptables -N natter 2> /dev/null
+iptables -I INPUT -j natter 2> /dev/null
+" \
+		> $include_file			
+		mkdir -p ${log_path}
+		iptables_remove_rule
+		mkdir -p /var/etc/natter
 		for u in $(seq 0 $(($(uci show natter 2> /dev/null | egrep '@ports\[[0-9]\]+=ports' | wc -l) - 1)))
 		do
-		{
 			for i in $port_list
 			do
-				eval ${i}=$(uci_get_by_type ports $u $i)
+				local eval $i="$(uci_get_by_type ports $u $i)"
+				echo "$i : $(uci_get_by_type ports $u $i)"
 			done ; unset i
-			if [ "$enable_port" == 1 ]
+
+			[ "$enable_port" != 1 ] && continue
+
+			case $port_type in
+			tcp | udp)
+				eval external_${port_type}="$local_ip:$external_port"
+				eval internal_${port_type}="$internal_ip:$internal_port"
+				iptables_type=$port_type
+			;;
+			both)
+				external_tcp="$local_ip:$external_port"
+				external_udp="$local_ip:$external_port"
+				internal_tcp="$internal_ip:$internal_port"
+				internal_udp="$internal_ip:$internal_port"
+				iptables_type="tcp udp"
+			;;
+			esac
+			
+			log_file=${log_path}/natter-${forward_mode}-${remarks}.log
+			json_file=/var/etc/natter/natter-${forward_mode}-${remarks}.json
+			status_file=${log_path}/natter-${forward_mode}-${remarks}.json
+
+			echo "{
+	\"logging\": {
+		\"level\": \"$log_level\",
+		\"log_file\": \"${log_file}\"
+	},
+	\"status_report\": {
+		\"hook\": \"$hook\",
+		\"status_file\": \"${status_file}\"
+	},
+	$(
+	case ${forward_mode} in
+	1)
+		echo "
+	\"open_port\": {
+		\"tcp\": [
+
+		],
+		\"udp\": [
+
+		]
+	},"
+		echo "
+	\"forward_port\": {
+		\"tcp\": [
+			$([ "$internal_tcp" ] && echo \"${internal_tcp}\")
+		],
+		\"udp\": [
+			$([ "$internal_udp" ] && echo \"${internal_udp}\")
+		]
+	},"
+	;;
+	2)
+		echo "
+	\"open_port\": {
+		\"tcp\": [
+			$([ "$external_tcp" ] && echo \"${external_tcp}\")
+		],
+		\"udp\": [
+			$([ "$external_udp" ] && echo \"${external_udp}\")
+		]
+	},"
+		echo "
+	\"forward_port\": {
+		\"tcp\": [
+
+		],
+		\"udp\": [
+
+		]
+	},"
+	;;
+	esac
+	)
+	\"stun_server\": {
+		\"tcp\": $(
+	printf "["
+	j=1 ; for i in $tcp_stun_server
+	do
+		[[ "$j" == 1 ]] && unset j || printf ", "
+		printf '"%s"' $i
+	done ; unset i j
+	printf "],")
+		\"udp\": $(
+	printf "["
+	j=1 ; for i in $udp_stun_server
+	do
+		[[ "$j" == 1 ]] && unset j || printf ", "
+		printf '"%s"' $i
+	done ; unset i j
+	printf "]")
+	},
+	\"keep_alive\": \"$keep_alive_url\"
+}" \
+			> $json_file
+			echo " ===== json File: $json_file ====="
+			echo " ===== log File: $log_file ====="
+			echo " ===== status File: $status_file ====="
+			cat $json_file
+			sleep $delay
+			for i in $(ps -efww | egrep 'natter.py' | grep -v grep | grep -v $$ | grep "$remarks" | awk '{print $1}')
+			do
+				kill -9 "$i" 2> /dev/null
+			done
+			$(command -v python) /usr/share/natter/natter.py -c $json_file &
+			if [ "$enable_forward" == 1 ]
 			then
-				while true
-				do
-					echo "[$(date '+%Y-%m-%d %H:%M:%S')] sleep $delay ; $(command -v python) /usr/share/natter/natter.py $extra_options $address $port" 2>&1 | tee -a $logfile
-					sleep $delay 
-					$(command -v python) /usr/share/natter/natter.py $extra_options $address $port 2>&1 | tee -a $logfile
-					echo "[$(date '+%Y-%m-%d %H:%M:%S')] Port $port exit ..." 2>&1 | tee -a $logfile
-					[ "${enable_retry}" != 1 ] && break
-				done
-				#procd_open_instance
-				#procd_set_param command $(command -v python) /usr/share/natter/natter.py $extra_options $address $port 2>&1 | tee -a $logfile
-				#procd_set_param respawn 3600 3 10
-				#procd_set_param stdout 1
-				#procd_set_param stderr 1
-				#procd_close_instance
+				case $forward_mode in
+				1)
+					:
+				;;
+				2)
+					iptables -N natter 2> /dev/null
+					iptables -I INPUT -j natter 2> /dev/null
+					for i in $iptables_type
+					do
+						# iptables -A natter \
+							-p $i -m $i --dport $external_port \
+							-m comment --comment "nt-op-$remarks" \
+							-j ACCEPT
+						# echo "iptables -A natter -p $i -m $i --dport $external_port -m comment --comment \"nt-op-$remarks\" -j ACCEPT" >> ${include_file}
+						iptables -t nat -A PREROUTING \
+							-p $i -m $i --dport $external_port \
+							-m comment --comment "nt-dnat-$remarks" \
+							-j DNAT \
+							--to-destination $internal_ip:$internal_port
+						echo "iptables -t nat -A PREROUTING -p $i -m $i --dport $external_port -m comment --comment \"nt-dnat-$remarks\" -j DNAT --to-destination $internal_ip:$internal_port" >> ${include_file}
+					done ; unset i
+				;;
+				esac
 			fi
-			unset enable_port delay address port extra_options enable_retry
-		} &
+			for i in $port_list
+			do
+				unset $(echo $i)
+			done ; unset i
+			unset iptables_type internal_tcp internal_udp external_tcp external_udp
 		done ; unset u
 	else
 		stop_service
@@ -46,9 +193,35 @@ start_service() {
 }
 
 stop_service() {
-	ps -efww | egrep 'natter.py|/etc/init.d/natter' | grep -v 'grep' | awk '{print $1}' | xargs kill -9
+	for i in $(ps -efww | egrep 'natter.py' | grep -v grep | grep -v $$ | awk '{print $1}')
+	do
+		kill -9 "$i" 2> /dev/null
+	done
+	iptables_remove_rule
+	rm /var/etc/natter.include 2> /dev/null
+	rm -r /var/etc/natter 2> /dev/null
+	rm -r /tmp/natter 2> /dev/null
 }
 
+iptables_remove_rule() {
+	iptables -D INPUT -j natter 2> /dev/null
+	iptables -F natter 2> /dev/null
+	iptables -X natter 2> /dev/null
+	iptables-save | grep -v 'nt-dnat' | iptables-restore
+}
+
+stop() {
+	stop_service
+}
+
+start() {
+	start_service
+}
+
+restart() {
+	stop
+	start
+}
 service_triggers() {
 	procd_add_reload_trigger "natter"
 }
