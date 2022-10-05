@@ -3,9 +3,9 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=natter
-PKG_VERSION=1.0
+PKG_VERSION=0.9
 PKG_RELEASE:=$(AUTORELEASE)
-PKG_SOURCE_VERSION:=384cea0e84cb37c7d6d1d7f57e4f0c885b7888de
+PKG_SOURCE_VERSION:=42005887f95dcfdfd5ed995bf237003f2f80ccfd
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_SOURCE_VERSION)
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_SOURCE_VERSION).tar.gz
@@ -17,7 +17,7 @@ include $(INCLUDE_DIR)/package.mk
 define Package/$(PKG_NAME)
 	SECTION:=net
 	CATEGORY:=Network
-	TITLE:=Open TCP Port under FullCone NAT (NAT 1)
+	TITLE:=Open Port under FullCone NAT (NAT 1)
 	URL:=https://github.com/MikeWang000000/Natter
 	DEPENDS:=+python3-light +iptables-mod-fullconenat
 endef
@@ -33,6 +33,8 @@ endef
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/usr/share/$(PKG_NAME)
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/Natter-$(PKG_SOURCE_VERSION)/natter.py $(1)/usr/share/$(PKG_NAME)/natter.py
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/Natter-$(PKG_SOURCE_VERSION)/natter-config.template.json $(1)/usr/share/$(PKG_NAME)/natter-config.template.json
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/Natter-$(PKG_SOURCE_VERSION)/natter-hook.sh $(1)/usr/share/$(PKG_NAME)/natter-hook.sh
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
