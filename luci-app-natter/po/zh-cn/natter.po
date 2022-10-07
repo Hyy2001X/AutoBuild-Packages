@@ -40,23 +40,41 @@ msgstr "Keep Alive 服务器"
 msgid "Directory to save natter logs"
 msgstr "Natter 运行日志保存路径 (文件夹)"
 
+msgid "ID"
+msgstr "标识"
+
+msgid "Just keep default, or ensure uniqueness"
+msgstr "保持默认即可, 修改时请确保标识的唯一性"
+
 msgid "Remarks"
 msgstr "备注"
 
 msgid "Internal Port"
 msgstr "内部端口"
 
+msgid "Internal Host IP address"
+msgstr "内部主机的 IP 地址"
+
+msgid "Internal Host Port"
+msgstr "内部主机的端口"
+
 msgid "External Port"
 msgstr "外部端口"
+
+msgid "Specify the port opened by Natter"
+msgstr "指定 Natter 打开的端口"
 
 msgid "Enable Port Forward"
 msgstr "启用端口转发"
 
+msgid "Forward opened port to internal host"
+msgstr "将打开的端口转发至内部主机"
+
 msgid "Port Type"
 msgstr "端口类型"
 
-msgid "Enable FullCone NAT (NAT 1)"
-msgstr "启用 FullCone NAT (NAT 1)"
+msgid "FullCone NAT"
+msgstr "FullCone NAT"
 
 msgid "Please DO NOT handle the IP address/domain name/port of the TCP/UDP STUN server (3478) while running proxy"
 msgstr "请不要使用任何代理软件代理 TCP/UDP STUN 服务器的IP 地址/域名/端口 (3478)"
@@ -64,14 +82,23 @@ msgstr "请不要使用任何代理软件代理 TCP/UDP STUN 服务器的IP 地�
 msgid "Local IP Address"
 msgstr "本地 IP 地址"
 
+msgid "Natter Listening Address"
+msgstr "Natter 监听地址"
+
+msgid "Please ensure that the address can be connected by Natter"
+msgstr "请确保 Keep Alive 服务器地址能被 Natter 连接"
+
 msgid "Internal IP Address"
 msgstr "内部 IP 地址"
 
 msgid "Forward Mode"
-msgstr "转发模式"
+msgstr "转发策略"
 
-msgid "Firewall"
-msgstr "防火墙"
+msgid "1 - Natter"
+msgstr "1 - Natter 内置"
+
+msgid "2 - Firewall"
+msgstr "2 - 防火墙"
 
 msgid "Delete Logs"
 msgstr "清除日志"

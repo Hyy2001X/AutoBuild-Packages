@@ -5,22 +5,23 @@ s = m:section(NamedSection, arg[1], "ports", "")
 s.addremove = false
 s.dynamic = false
 
-local rand_remarks = luci.sys.exec("cut -d '-' -f1 /proc/sys/kernel/random/uuid 2> /dev/null")
-
 enable_port = s:option(Flag, "enable_port", translate("Enable"))
 
+local rand_id = luci.sys.exec("cut -d '-' -f1 /proc/sys/kernel/random/uuid 2> /dev/null")
+id = s:option(Value, "id", translate("ID"), translate("Just keep default, or ensure uniqueness"))
+id.default = rand_id
+
 remarks = s:option(Value, "remarks", translate("Remarks"))
-remarks.default = rand_remarks
 remarks.rmempty = false
 
 forward_mode = s:option(ListValue, "forward_mode", translate("Forward Mode"))
-forward_mode:value('1', translate("Natter"))
-forward_mode:value('2', translate("Firewall"))
+forward_mode:value('1', translate("1 - Natter"))
+forward_mode:value('2', translate("2 - Firewall"))
 forward_mode.default = 2
 
-external_port = s:option(Value, "external_port", translate("External Port"))
+external_port = s:option(Value, "external_port", translate("External Port"), translate("Specify the port opened by Natter"))
 external_port.datatype = "port"
-external_port:depends({forward_mode=2})
+external_port:depends({forward_mode = "2"})
 
 port_type = s:option(ListValue, "port_type", translate("Port Type"))
 port_type:value("udp", translate("UDP"))
@@ -29,19 +30,21 @@ port_type:value("both", translate("TCP + UDP"))
 port_type.default = both
 port_type.rempty = false
 
-enable_forward = s:option(Flag, "enable_forward", translate("Enable Port Forward"))
-enable_forward.default = 0
+enable_forward = s:option(Flag, "enable_forward", translate("Enable Port Forward"), translate("Forward opened port to internal host"))
+enable_forward.default = 1
+enable_forward.rempty = false
 
-internal_ip = s:option(Value, "internal_ip", translate("Internal IP address"))
+internal_ip = s:option(Value, "internal_ip", translate("Internal IP address"), translate("Internal Host IP address"))
 internal_ip.datatype = "ipmask4"
-internal_ip:depends({enable_forward=1})
-luci.sys.net.ipv4_hints(function(ip, name)
+internal_ip:depends({enable_forward = "1"})
+luci.sys.net.ipv4_hints(
+function(ip, name)
 	internal_ip:value(ip, "%s (%s)" %{ ip, name })
 end)
 
-internal_port = s:option(Value, "internal_port", translate("Internal Port"))
+internal_port = s:option(Value, "internal_port", translate("Internal Port"), translate("Internal Host Port"))
 internal_port.datatype = "port"
-internal_port:depends({enable_forward=1})
+internal_port:depends({enable_forward = "1"})
 
 delay = s:option(Value, "delay", translate("Start delay (Seconds)"))
 delay.default = 0
@@ -54,7 +57,9 @@ log_level:value('info', translate("Info"))
 log_level:value('warning', translate("Warning"))
 log_level:value('error', translate("Error"))
 
+--[[
 hook = s:option(Value, "hook", translate("Hook"))
 hook.rmempty = true
+--]]
 
 return m

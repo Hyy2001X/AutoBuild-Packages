@@ -5,7 +5,7 @@ USE_PROCD=0
 
 start_service() {
 	local basic_list="enable enable_fullcone_nat log_path tcp_stun_server udp_stun_server keep_alive_url local_ip"
-	local port_list="enable_port remarks port enable_forward \
+	local port_list="enable_port id remarks port enable_forward \
 		forward_mode external_port port_type delay log_level \
 		internal_ip internal_port hook"
 	for i in $basic_list
@@ -14,6 +14,7 @@ start_service() {
 	done ; unset i
 	if [ "$enable_fullcone_nat" == 1 ]
 	then
+		echo "Starting Natter ..."
 		if [ "$(uci get firewall.@defaults[0].fullcone > /dev/null ; echo $?)" == 0 ]
 		then
 			if [ "$(uci get firewall.@defaults[0].fullcone)" == 0 ]
@@ -67,9 +68,9 @@ iptables -I INPUT -j natter 2> /dev/null
 			;;
 			esac
 			
-			log_file=${log_path}/natter-${forward_mode}-${remarks}.log
-			json_file=/var/etc/natter/natter-${forward_mode}-${remarks}.json
-			status_file=${log_path}/natter-${forward_mode}-${remarks}.json
+			log_file=${log_path}/natter-${id}-${remarks}.log
+			json_file=/var/etc/natter/natter-${id}-${remarks}.json
+			status_file=${log_path}/natter-${id}-${remarks}.json
 
 			echo "{
 	\"logging\": {
@@ -145,12 +146,11 @@ iptables -I INPUT -j natter 2> /dev/null
 	\"keep_alive\": \"$keep_alive_url\"
 }" \
 			> $json_file
-			echo " ===== json File: $json_file ====="
-			echo " ===== log File: $log_file ====="
-			echo " ===== status File: $status_file ====="
-			cat $json_file
+			echo "json File: $json_file"
+			echo "log File: $log_file"
+			echo "status File: $status_file"
 			sleep $delay
-			for i in $(ps -efww | egrep 'natter.py' | grep -v grep | grep -v $$ | grep "$remarks" | awk '{print $1}')
+			for i in $(ps -efww | egrep 'natter.py' | grep -v grep | grep -v $$ | grep "$id" | awk '{print $1}')
 			do
 				kill -9 "$i" 2> /dev/null
 			done
@@ -168,15 +168,15 @@ iptables -I INPUT -j natter 2> /dev/null
 					do
 						# iptables -A natter \
 							-p $i -m $i --dport $external_port \
-							-m comment --comment "nt-op-$remarks" \
+							-m comment --comment "nt-op-$id-$remarks" \
 							-j ACCEPT
-						# echo "iptables -A natter -p $i -m $i --dport $external_port -m comment --comment \"nt-op-$remarks\" -j ACCEPT" >> ${include_file}
+						# echo "iptables -A natter -p $i -m $i --dport $external_port -m comment --comment \"nt-op-$id-$remarks\" -j ACCEPT" >> ${include_file}
 						iptables -t nat -A PREROUTING \
 							-p $i -m $i --dport $external_port \
-							-m comment --comment "nt-dnat-$remarks" \
+							-m comment --comment "nt-dnat-$id-$remarks" \
 							-j DNAT \
 							--to-destination $internal_ip:$internal_port
-						echo "iptables -t nat -A PREROUTING -p $i -m $i --dport $external_port -m comment --comment \"nt-dnat-$remarks\" -j DNAT --to-destination $internal_ip:$internal_port" >> ${include_file}
+						echo "iptables -t nat -A PREROUTING -p $i -m $i --dport $external_port -m comment --comment \"nt-dnat-$id-$remarks\" -j DNAT --to-destination $internal_ip:$internal_port" >> ${include_file}
 					done ; unset i
 				;;
 				esac
@@ -188,11 +188,13 @@ iptables -I INPUT -j natter 2> /dev/null
 			unset iptables_type internal_tcp internal_udp external_tcp external_udp
 		done ; unset u
 	else
+		echo "Natter is disabled ..."
 		stop_service
 	fi
 }
 
 stop_service() {
+	echo "Stopping Natter ..."
 	for i in $(ps -efww | egrep 'natter.py' | grep -v grep | grep -v $$ | awk '{print $1}')
 	do
 		kill -9 "$i" 2> /dev/null
@@ -204,6 +206,7 @@ stop_service() {
 }
 
 iptables_remove_rule() {
+	echo "Removing iptable rules ..."
 	iptables -D INPUT -j natter 2> /dev/null
 	iptables -F natter 2> /dev/null
 	iptables -X natter 2> /dev/null

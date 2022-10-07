@@ -7,10 +7,10 @@ s.anonymous = true
 enable = s:option(Flag, "enable", translate("Enable"))
 enable.default = 0
 
-enable_fullcone_nat = s:option(Flag, "enable_fullcone_nat", translate("Enable FullCone NAT (NAT 1)"))
+enable_fullcone_nat = s:option(Flag, "enable_fullcone_nat", translate("FullCone NAT"))
 enable_fullcone_nat.default = 0
 
-local_ip = s:option(Value, "local_ip", translate("Local IP Address"))
+local_ip = s:option(Value, "local_ip", translate("Local IP Address"), translate("Natter Listening Address"))
 local_ip.default = "0.0.0.0"
 local_ip.placeholder = "0.0.0.0"
 local_ip.datatype = "host"
@@ -21,36 +21,12 @@ log_path.default = "/tmp/natter"
 log_path.placeholder = "/tmp/natter"
 log_path.rmempty = false
 
-keep_alive_server = s:option(Value, "keep_alive_server", translate("Keep Alive Server"))
+keep_alive_server = s:option(Value, "keep_alive_server", translate("Keep Alive Server"), translate("Please ensure that the address can be connected by Natter"))
 keep_alive_server.rmempty = false
 
 tcp_stun_server = s:option(DynamicList, "tcp_stun_server", translate("TCP STUN Server"), translate("Please DO NOT handle the IP address/domain name/port of the TCP/UDP STUN server (3478) while running proxy"))
 udp_stun_server = s:option(DynamicList, "udp_stun_server", translate("UDP STUN Server"))
 udp_stun_server.rmempty = false
-
---[[
-s = m:section(TypedSection, "stun_servers", translate("STUN Server Settings"))
-
-s.addremove = true
-s.anonymous = true
-s.template = "cbi/tblsection"
-
-enable_stun_server = s:option(Flag, "enable_stun_server", translate("Enable"))
-enable_stun_server.default = 1
-enable_stun_server.rmempty = false
-
-stun_server_name = s:option(Value, "stun_server_name", translate("STUN Server Name"))
-stun_server_name.rmempty = true 
-
-stun_server_domain = s:option(Value, "stun_server_domain", translate("STUN Server Domain"))
-stun_server_domain.rmempty = false 
-
-stun_server_type = s:option(ListValue, "stun_server_type", translate("STUN Server Type"))
-stun_server_type:value("udp", translate("UDP"))
-stun_server_type:value("tcp", translate("TCP"))
-stun_server_type.default = tcp
-stun_server_type.rempty = false
---]]
 
 s = m:section(TypedSection, "ports", translate("Port Settings"))
 s.anonymous = true
@@ -68,6 +44,9 @@ end
 enable_port = s:option(Flag, "enable_port", translate("Enable"))
 enable_port.default = 1
 enable_port.width = "5%"
+
+id = s:option(DummyValue, "id", translate("ID"))
+id.width = "8%"
 
 remarks = s:option(DummyValue, "remarks", translate("Remarks"))
 remarks.width = "10%"
