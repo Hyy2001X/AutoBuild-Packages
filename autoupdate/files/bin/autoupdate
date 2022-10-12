@@ -3,7 +3,7 @@
 # AutoUpdate for Openwrt
 # Dependences: wget-ssl/wget/uclient-fetch curl jq expr sysupgrade
 
-Version=V6.9.5
+Version=V6.9.6
 
 function TITLE() {
 	clear && echo "Openwrt-AutoUpdate Script by Hyy2001 ${Version}"
@@ -780,8 +780,7 @@ $(echo -e "云端固件版本: ${CLOUD_FW_Version}${CHECKED_Type}")
 			ECHO && read -p "${err_MSG},是否继续更新固件?[Y/n]:" Choose
 		} || Choose=Y
 		[[ ! ${Choose} =~ [Yy] ]] && {
-			ECHO x "已取消固件更新操作,即将退出更新程序 ..."
-			sleep 1
+			ECHO x "已取消固件更新操作,退出更新程序 ..."
 			exit 0
 		}
 	;;
@@ -975,7 +974,7 @@ function DOWNLOADER() {
 	done
 	case "${DL_Downloader}" in
 	wget*)
-		DL_Template="${DL_Downloader} --quiet --no-check-certificate -x -4 --tries 1 --timeout 10 -O"
+		DL_Template="${DL_Downloader} --quiet --no-check-certificate --tries 1 --timeout 10 -O"
 	;;
 	curl)
 		DL_Template="${DL_Downloader} --silent --insecure -L -k --connect-timeout 10 --retry 1 -o"
