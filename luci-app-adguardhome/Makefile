@@ -1,10 +1,10 @@
-# Copyright (C) 2020-2021 Hyy2001X <https://github.com/Hyy2001X>
+# Copyright (C) 2020-2023 Hyy2001X <https://github.com/Hyy2001X>
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=luci-app-adguardhome
 PKG_VERSION:=1.0
-PKG_RELEASE:=20210913
+PKG_RELEASE:=20230123
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
