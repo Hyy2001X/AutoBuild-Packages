@@ -1102,7 +1102,7 @@ function Proxy_X() {
 	
 	case "${Type}" in
 	raw)
-		A=https://hub.fgit.cf/$(echo ${URL##*com/})
+		A=https://raw.fgit.cf/$(echo ${URL##*com/})
 		F=https://git.hyy2001.workers.dev/$(echo ${URL##*com/})
 		G=https://mirror.ghproxy.com/${URL}
 	;;
