@@ -3,7 +3,7 @@
 # AutoUpdate for Openwrt
 # Dependences: wget-ssl/wget/uclient-fetch curl jq expr sysupgrade
 
-Version=V6.9.10
+Version=V6.9.11
 
 function TITLE() {
 	clear && echo "Openwrt-AutoUpdate Script by Hyy2001 ${Version}"
@@ -1118,15 +1118,15 @@ function Proxy_X() {
 	
 	case "${Type}" in
 	raw)
-		F=https://git.hyy2001.workers.dev/$(echo ${URL##*com/})
+		F=https://proxy.hyy2001.workers.dev/$(echo ${URL##*com/})
 		G=https://mirror.ghproxy.com/${URL}
 	;;
 	release)
-		F=https://git.hyy2001.workers.dev/$(echo ${URL##*com/})
+		F=https://proxy.hyy2001.workers.dev/$(echo ${URL##*com/})
 		G=https://mirror.ghproxy.com/${URL}
 	;;
 	codeload)
-		F=https://git.hyy2001.workers.dev/$(echo ${URL##*com/})
+		F=https://proxy.hyy2001.workers.dev/$(echo ${URL##*com/})
 		G=https://mirror.ghproxy.com/${URL}
 	;;
 	esac
