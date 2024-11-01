@@ -3,7 +3,7 @@
 # AutoUpdate for Openwrt
 # Dependences: wget-ssl/wget/uclient-fetch curl jq expr sysupgrade
 
-Version=V6.10.2
+Version=V6.10.3
 
 function TITLE() {
 	clear && echo "Openwrt-AutoUpdate Script by Hyy2001 ${Version}"
@@ -131,7 +131,7 @@ function RM() {
 }
 
 GET_DOWNLOADER() {
-	for i in wget curl uclient-fetch
+	for i in ${DL_DEPENDS[@]}
 	do
 		if [[ $(CHECK_PKG $i) == true ]]
 		then
@@ -139,6 +139,7 @@ GET_DOWNLOADER() {
 			return 0
 		fi
 	done
+	LOGGER "没有可用的下载器!"
 	return 1
 }
 
@@ -573,9 +574,7 @@ function GET_FW_INFO() {
 		exit 1
 	}
 	Info=$(grep "AutoBuild-${OP_REPO}-${TARGET_PROFILE}" ${API_File} | grep "${TARGET_FLAG}" | awk 'BEGIN {MAX = 0} {if ($6+0 > MAX+0) {MAX=$6 ;content=$0} } END {print content}')
-	LOGGER "$Info"
 	Result="$(awk '{print $"'${1}'"}' <<< ${Info} 2> /dev/null)"
-	LOGGER "$Result"
 	case $1 in
 	1) Type="固件名称";;
 	2) Type="固件格式";;
@@ -1151,7 +1150,7 @@ function Proxy_X() {
 function NETWORK_CHECK() {
 	case $(GET_DOWNLOADER) in
 	curl)
-		local Result=$(curl -I -s --connect-timeout 3 $1 -w %{http_code} 2> /dev/null | tail -n1)
+		local Result=$(curl -I -o /dev/null -skL --connect-timeout 3 --retry 0 -w %{http_code} $1 2> /dev/null | tail -n1)
 		if [[ ${Result} == 204 ]]
 		then
 			echo true
@@ -1159,9 +1158,19 @@ function NETWORK_CHECK() {
 			return 0
 		fi
 	;;
-	wget | wget-ssl | uclient-fetch)
+	wget | wget-ssl)
 		rm -f "${Tmp_Path}/generate_204" > /dev/null 2>&1
-		$(GET_DOWNLOADER) "$1" --quiet --no-proxy --no-check-certificate --spider
+		$(GET_DOWNLOADER) "$1" -q --no-check-certificate --spider --timeout=3 --no-dns-cache -4 --tries 1
+		if [[ $? == 0 ]]
+		then
+			echo true
+			LOGGER "[$(GET_DOWNLOADER)] [$1] 连通性测试正常!"
+			return 0
+		fi
+	;;
+	uclient-fetch)
+		rm -f "${Tmp_Path}/generate_204" > /dev/null 2>&1
+		uclient-fetch "$1" --quiet --no-check-certificate --spider --timeout=3
 		if [[ $? == 0 ]]
 		then
 			echo true
@@ -1379,7 +1388,7 @@ function AutoUpdate_Main() {
 }
 
 function KILL_PROCESS() {
-	local i ; for i in $(ps -efww | grep -v grep | grep $1 | grep -v $$ | awk '{print $1}')
+	local i ; for i in $(ps -ef 2> /dev/null | grep -v grep | grep $1 | grep -v $$ | awk '{print $1}' 2> /dev/null)
 	do
 		kill -9 ${i} 2> /dev/null &
 		LOGGER "结束进程: ${i}"
