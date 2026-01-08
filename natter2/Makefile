@@ -38,4 +38,3 @@ define Package/$(PKG_NAME)/install
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
-
