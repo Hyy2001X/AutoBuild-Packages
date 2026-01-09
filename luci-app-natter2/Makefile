@@ -8,7 +8,7 @@ PKG_RELEASE:=3
 
 LUCI_TITLE:=LuCI Support for Natter v2.0.0-rc2
 LUCI_PKGARCH:=all
-LUCI_DEPENDS:=+natter2
+LUCI_DEPENDS:=+natter2 +coreutils-nohup
 
 include $(TOPDIR)/feeds/luci/luci.mk
 

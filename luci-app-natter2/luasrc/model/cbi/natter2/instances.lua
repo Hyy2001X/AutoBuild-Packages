@@ -64,7 +64,7 @@ forwarding_method:value('socket', translate("socket (Not Recommended)"))
 if check_binary("iptables") then
 	forwarding_method:value('iptables', translate("iptables (Recommended)"))
 end
-if check_binary("nftables") then
+if check_binary("nft") then
 	forwarding_method:value('nftables', translate("nftables (Recommended)"))
 end
 if check_binary("socat") then

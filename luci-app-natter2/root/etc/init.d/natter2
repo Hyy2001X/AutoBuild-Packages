@@ -98,9 +98,9 @@ start_service() {
 
 stop_service() {
 	echo "Stopping Natter2 ..."
-	for i in $(ps -efww | grep "$script_path" | grep -v grep | grep -v $$ | awk '{print $1}')
+	for i in $(ps -ww | grep "$script_path" | grep -v grep | grep -v $$ | awk '{print $1}')
 	do
-		kill -9 "$i" 2> /dev/null
+		kill -15 "$i" 2> /dev/null
 	done
 	rm -r "$tmp_path" 2> /dev/null
 	for u in $(seq 0 $(($(uci show natter2 2> /dev/null | egrep '@instances\[[0-9]\]+=instances' | wc -l) - 1)))
@@ -109,6 +109,7 @@ stop_service() {
 		uci commit natter2
 	done
 	rm -f /tmp/natter2_nat_type
+	
 }
 
 restart() {
