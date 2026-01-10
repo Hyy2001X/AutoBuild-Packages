@@ -43,17 +43,17 @@ interval.datatype = "uinteger"
 enable_upnp_service = s:option(Flag, "enable_upnp_service", translate("Enable UPnP Service"),
 	translate("Using UPnP to map ports on your device"))
 
-enable_bonding = s:option(Flag, "enable_bonding", translate("Enable Bonding Options"), translate("Usually there is no need to enable binding"))
-enable_bonding.rmempty = true
-bonding_interface = s:option(Value, "bonding_interface", translate("Bonding Interface"))
-bonding_interface.rmempty = true
-bonding_interface.default = '0.0.0.0'
-bonding_interface:depends({enable_bonding = "1"})
+enable_binding = s:option(Flag, "enable_binding", translate("Enable Binding Options"), translate("Usually there is no need to enable binding"))
+enable_binding.rmempty = true
+binding_interface = s:option(Value, "binding_interface", translate("Binding Interface"))
+binding_interface.rmempty = true
+binding_interface.default = '0.0.0.0'
+binding_interface:depends({enable_binding = "1"})
 
-bonding_port = s:option(Value, "bonding_port", translate("Bonding Port"))
-bonding_port.rmempty = true
-bonding_port.default = '0'
-bonding_port:depends({enable_bonding = "1"})
+binding_port = s:option(Value, "binding_port", translate("Binding Port"))
+binding_port.rmempty = true
+binding_port.default = '0'
+binding_port:depends({enable_binding = "1"})
 
 enable_forwarding = s:option(Flag, "enable_forwarding", translate("Enable Forwarding Options"), translate("Forwarding to internal devices"))
 

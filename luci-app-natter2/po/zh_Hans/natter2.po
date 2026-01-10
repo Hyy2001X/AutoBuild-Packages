@@ -64,13 +64,13 @@ msgstr "保活间隔（秒）"
 msgid "The number of seconds between keepalive"
 msgstr "每次保活的间隔秒数"
 
-msgid "Enable Bonding Options"
+msgid "Enable Binding Options"
 msgstr "启用绑定"
 
-msgid "Bonding Interface"
+msgid "Binding Interface"
 msgstr "绑定接口"
 
-msgid "Bonding Port"
+msgid "Binding Port"
 msgstr "绑定端口"
 
 msgid "Enable Forwarding Options"
