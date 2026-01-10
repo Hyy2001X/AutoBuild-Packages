@@ -10,7 +10,7 @@ start_service() {
 		interval enable_bonding bonding_interface bonding_port \
 		enable_forwarding forwarding_method target_address target_port \
 		enable_forwarding_retry enable_quit delay log_level enable_notify \
-		notify_path"
+		notify_path enable_upnp_service"
 	for i in $basic_list
 	do
 		local eval $i="$(uci_get_by_type base 0 $i)"
@@ -43,6 +43,8 @@ start_service() {
 			[ "$enable_keepalive_server" == 1 ] && script_command="$script_command -h $keepalive_server"
 			[ "$interval" ] && script_command="$script_command -k $interval"
 			
+			[ "$enable_upnp_service" == 1 ] && script_command="$script_command -U"
+
 			if [ "$enable_bonding" == 1 ]
 			then
 				[ "$bonding_interface" ] && script_command="$script_command -i $bonding_interface"
